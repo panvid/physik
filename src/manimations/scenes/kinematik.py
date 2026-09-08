@@ -276,3 +276,25 @@ class BeschleunigtXZeitDiagramm(Scene):
         parabel_label.next_to(parabel_punkt, UL, buff=0.15)
 
         self.add(axes_group, parabel, parabel_label)
+
+class BeschleunigtAZeitDiagramm(Scene):
+    def construct(self):
+        origin = LEFT * 2.5 + DOWN * 2
+
+        y_axis = Arrow(start=origin, end=origin + UP * 4.5, buff=0, color=WHITE)
+        y_label = MathTex("a").next_to(y_axis.get_end(), UP, buff=0.15)
+
+        x_axis = Arrow(start=origin, end=origin + RIGHT * 5.5, buff=0, color=WHITE)
+        x_label = MathTex("t").next_to(x_axis.get_end(), RIGHT, buff=0.15)
+
+        axes_group = VGroup(x_axis, y_axis, x_label, y_label)
+
+        a_hoehe = origin + UP * 2.5
+        gerade = Line(
+            start=a_hoehe,
+            end=a_hoehe + RIGHT * 5.0,
+            stroke_width=4,
+            color=BLUE
+        )
+
+        self.add(axes_group, gerade)

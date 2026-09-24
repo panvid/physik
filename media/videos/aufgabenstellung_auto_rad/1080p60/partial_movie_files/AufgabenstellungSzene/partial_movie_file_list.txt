@@ -1,4 +1,0 @@
-# This file is used internally by FFMPEG.
-file 'file:/home/panvid/physik/media/videos/aufgabenstellung_auto_rad/1080p60/partial_movie_files/AufgabenstellungSzene/3373382780_847192958_1997838746.mp4'
-file 'file:/home/panvid/physik/media/videos/aufgabenstellung_auto_rad/1080p60/partial_movie_files/AufgabenstellungSzene/4234509111_1804848713_3294077384.mp4'
-file 'file:/home/panvid/physik/media/videos/aufgabenstellung_auto_rad/1080p60/partial_movie_files/AufgabenstellungSzene/4234509111_847192958_457845095.mp4'

@@ -307,3 +307,49 @@ class SenkrechterWurfYTDiagramm(Scene):
             dot_tw,
             label_tw
         )
+
+class SenkrechterWurfVTDiagramm(Scene):
+    def construct(self):
+        origin = LEFT * 3.5 + UP * 0.5
+
+        y_axis = Arrow(start=origin + DOWN * 3.5, end=origin + UP * 2.5, buff=0, color=WHITE)
+        y_label = MathTex("v", font_size=28).next_to(y_axis.get_end(), UP, buff=0.15)
+
+        x_axis = Arrow(start=origin + LEFT * 0.5, end=origin + RIGHT * 7.5, buff=0, color=WHITE)
+        x_label = MathTex("t", font_size=28).next_to(x_axis.get_end(), RIGHT, buff=0.15)
+
+        axes_group = VGroup(x_axis, y_axis, x_label, y_label)
+
+        v0_pos = origin + UP * 1.8
+        v0_dot = Dot(v0_pos, radius=0.08, color=BLUE)
+        v0_label = MathTex("v_0", font_size=26, color=BLUE).next_to(v0_pos, LEFT, buff=0.15)
+
+        gerade = Line(
+            start=v0_pos,
+            end=origin + RIGHT * 5.0 + DOWN * 1.8,
+            stroke_width=4,
+            color=GREEN
+        )
+
+        p_ts_x = origin + RIGHT * 2.5
+        dot_ts = Dot(p_ts_x, radius=0.08, color=YELLOW)
+        label_ts = MathTex("t_s", font_size=24, color=YELLOW).next_to(p_ts_x, UP, buff=0.15)
+
+        p_tw_x = origin + RIGHT * 5.0
+        p_tw_end = p_tw_x + DOWN * 1.8
+        dot_tw = Dot(p_tw_end, radius=0.08, color=RED)
+
+        line_tw = DashedLine(p_tw_end, p_tw_x, color=GRAY, stroke_width=2)
+        label_tw = MathTex("t_w", font_size=24, color=RED).next_to(p_tw_x, UP, buff=0.15)
+
+        self.add(
+            axes_group,
+            gerade,
+            v0_dot,
+            v0_label,
+            dot_ts,
+            label_ts,
+            dot_tw,
+            line_tw,
+            label_tw
+        )

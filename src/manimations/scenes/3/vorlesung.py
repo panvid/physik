@@ -259,3 +259,51 @@ class SenkrechterWurfSkizze(Scene):
             peak_dot,
             ymax_group
         )
+
+class SenkrechterWurfYTDiagramm(Scene):
+    def construct(self):
+        origin = LEFT * 3.5 + DOWN * 2.0
+
+        y_axis = Arrow(start=origin + DOWN * 0.5, end=origin + UP * 5.0, buff=0, color=WHITE)
+        y_label = MathTex("y", font_size=28).next_to(y_axis.get_end(), UP, buff=0.15)
+
+        x_axis = Arrow(start=origin + LEFT * 0.5, end=origin + RIGHT * 7.5, buff=0, color=WHITE)
+        x_label = MathTex("t", font_size=28).next_to(x_axis.get_end(), RIGHT, buff=0.15)
+
+        axes_group = VGroup(x_axis, y_axis, x_label, y_label)
+
+        parabel = ParametricFunction(
+            lambda t: origin + RIGHT * (t * 1.1) + UP * (3.0 * t - 0.6 * t**2),
+            t_range=[0, 5.0],
+            stroke_width=4,
+            color=BLUE
+        )
+
+        p_peak = origin + RIGHT * (2.5 * 1.1) + UP * 3.75
+        dot_peak = Dot(p_peak, radius=0.08, color=YELLOW)
+        v0_peak_label = MathTex("v = 0", font_size=24, color=YELLOW).next_to(p_peak, UP, buff=0.15)
+
+        p_ts_x = np.array([p_peak[0], origin[1], 0])
+        line_ts = DashedLine(p_peak, p_ts_x, color=GRAY, stroke_width=2)
+        label_ts = MathTex("t_s", font_size=24).next_to(p_ts_x, DOWN, buff=0.15)
+
+        p_ymax_y = np.array([origin[0], p_peak[1], 0])
+        line_ymax = DashedLine(p_peak, p_ymax_y, color=GRAY, stroke_width=2)
+        label_ymax = MathTex("y_{\\text{max}}", font_size=24).next_to(p_ymax_y, LEFT, buff=0.15)
+
+        p_tw = origin + RIGHT * (5.0 * 1.1)
+        dot_tw = Dot(p_tw, radius=0.08, color=RED)
+        label_tw = MathTex("t_w", font_size=24).next_to(p_tw, DOWN, buff=0.15)
+
+        self.add(
+            axes_group,
+            parabel,
+            dot_peak,
+            v0_peak_label,
+            line_ts,
+            label_ts,
+            line_ymax,
+            label_ymax,
+            dot_tw,
+            label_tw
+        )

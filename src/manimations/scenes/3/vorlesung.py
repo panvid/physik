@@ -117,3 +117,26 @@ class YTDiagrammVierterQuadrant(Scene):
         )
 
         self.add(axes_group, parabel)
+
+class VTDiagrammVierterQuadrant(Scene):
+    def construct(self):
+        origin = LEFT * 3.0 + UP * 1.5
+
+        y_axis = Arrow(start=origin + DOWN * 4.5, end=origin + UP * 1.0, buff=0, color=WHITE)
+        y_label = MathTex("v").next_to(y_axis.get_end(), UP, buff=0.15)
+
+        x_axis = Arrow(start=origin + LEFT * 0.5, end=origin + RIGHT * 6.0, buff=0, color=WHITE)
+        x_label = MathTex("t").next_to(x_axis.get_end(), RIGHT, buff=0.15)
+
+        axes_group = VGroup(x_axis, y_axis, x_label, y_label)
+
+        v0_label = MathTex("v = 0", font_size=24).next_to(origin, UL, buff=0.15)
+
+        gerade = Line(
+            start=origin,
+            end=origin + RIGHT * 5.0 + DOWN * 3.75,
+            stroke_width=4,
+            color=GREEN
+        )
+
+        self.add(axes_group, v0_label, gerade)

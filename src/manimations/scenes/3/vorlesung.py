@@ -353,3 +353,59 @@ class SenkrechterWurfVTDiagramm(Scene):
             line_tw,
             label_tw
         )
+
+class BahnkurveVektorenDiagramm(Scene):
+    def construct(self):
+        origin = LEFT * 0.5 + DOWN * 0.8
+
+        def proj(x, y, z):
+            return origin + RIGHT * (x * 0.85 - z * 0.7) + UP * (y * 0.75 - z * 0.45)
+
+        p_x = proj(6.0, 0, 0)
+        p_y = proj(0, 4.5, 0)
+        p_z = proj(0, 0, 4.2)
+
+        x_axis = Arrow(start=origin, end=p_x, buff=0, color=WHITE)
+        x_label = MathTex("x", font_size=28).next_to(p_x, DR, buff=0.1)
+
+        y_axis = Arrow(start=origin, end=p_y, buff=0, color=WHITE)
+        y_label = MathTex("y", font_size=28).next_to(p_y, UP, buff=0.1)
+
+        z_axis = Arrow(start=origin, end=p_z, buff=0, color=WHITE, stroke_width=4)
+        z_label = MathTex("z", font_size=28).next_to(p_z, DL, buff=0.15)
+
+        axes_group = VGroup(x_axis, y_axis, z_axis, x_label, y_label, z_label)
+
+        def path_func(t):
+            x = 0.75 * t
+            y = 1.0 * np.sin(0.6 * t) + 0.3 * t + 0.6
+            z = 0.4 * np.cos(0.8 * t) + 0.3 * t + 0.1
+            return proj(x, y, z)
+
+        bahnkurve = ParametricFunction(
+            path_func,
+            t_range=[0.2, 7.2],
+            color=GRAY_B,
+            stroke_width=4
+        )
+
+        t1 = 1.8
+        t2 = 5.6
+
+        p1 = path_func(t1)
+        p2 = path_func(t2)
+
+        r1_arrow = Arrow(start=origin, end=p1, buff=0, color=BLUE, stroke_width=3)
+        r1_label = MathTex("\\vec{r}(t_1)", color=BLUE, font_size=26).next_to(p1, UL, buff=0.1)
+        dot1 = Dot(p1, color=BLUE, radius=0.08)
+
+        r2_arrow = Arrow(start=origin, end=p2, buff=0, color=RED, stroke_width=3)
+        r2_label = MathTex("\\vec{r}(t_2)", color=RED, font_size=26).next_to(p2, UR, buff=0.1)
+        dot2 = Dot(p2, color=RED, radius=0.08)
+
+        self.add(
+            axes_group,
+            bahnkurve,
+            r1_arrow, r1_label, dot1,
+            r2_arrow, r2_label, dot2
+        )

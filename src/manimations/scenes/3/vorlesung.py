@@ -188,3 +188,74 @@ class AufprallgeschwindigkeitAufbau(Scene):
             hoehe_pfeil,
             hoehe_label
         )
+
+class SenkrechterWurfSkizze(Scene):
+    def construct(self):
+        ebene = Line(start=LEFT * 3.5, end=RIGHT * 3.5, color=GRAY, stroke_width=4).shift(DOWN * 2.5)
+        ebene_schraffur = VGroup(*[
+            Line(
+                start=ebene.point_from_proportion(i / 14) + DOWN * 0.2 + LEFT * 0.1,
+                end=ebene.point_from_proportion(i / 14),
+                color=GRAY,
+                stroke_width=2
+            )
+            for i in range(15)
+        ])
+        boden_gruppe = VGroup(ebene, ebene_schraffur)
+
+        y_null_label = MathTex("y = 0", font_size=24, color=WHITE).next_to(ebene, LEFT, buff=0.3)
+
+        y_axis = Arrow(start=LEFT * 2.5 + DOWN * 2.5, end=LEFT * 2.5 + UP * 3.0, buff=0, color=WHITE)
+        y_label = MathTex("y", font_size=28).next_to(y_axis.get_end(), UP, buff=0.15)
+        axis_group = VGroup(y_axis, y_label)
+
+        up_positions = [-2.2, -1.5, -0.5, 0.8, 1.8, 2.2]
+        up_dots = VGroup()
+        for pos in up_positions:
+            dot = Dot(LEFT * 1.0 + UP * pos, radius=0.06, color=BLUE)
+            up_dots.add(dot)
+
+        v0_arrow = Arrow(
+            start=LEFT * 1.0 + DOWN * 2.2,
+            end=LEFT * 1.0 + DOWN * 1.2,
+            color=BLUE,
+            buff=0,
+            stroke_width=3
+        )
+        v0_label = MathTex("v_0", font_size=26, color=BLUE).next_to(v0_arrow, LEFT, buff=0.15)
+
+        down_positions = [2.2, 1.8, 0.8, -0.5, -1.5, -2.2]
+        down_dots = VGroup()
+        for pos in down_positions:
+            dot = Dot(RIGHT * 0.2 + UP * pos, radius=0.06, color=RED)
+            down_dots.add(dot)
+
+        peak_dot = Dot(LEFT * 0.4 + UP * 2.3, radius=0.08, color=YELLOW)
+
+        ymax_line = DashedLine(
+            start=LEFT * 0.4 + UP * 2.3,
+            end=RIGHT * 1.8 + UP * 2.3,
+            color=GRAY,
+            stroke_width=2
+        )
+        ymax_arrow = DoubleArrow(
+            start=RIGHT * 1.8 + DOWN * 2.5,
+            end=RIGHT * 1.8 + UP * 2.3,
+            buff=0,
+            color=YELLOW,
+            stroke_width=3
+        )
+        ymax_label = MathTex("y_{\\text{max}}", font_size=28, color=YELLOW).next_to(ymax_arrow, RIGHT, buff=0.15)
+        ymax_group = VGroup(ymax_line, ymax_arrow, ymax_label)
+
+        self.add(
+            boden_gruppe,
+            y_null_label,
+            axis_group,
+            up_dots,
+            v0_arrow,
+            v0_label,
+            down_dots,
+            peak_dot,
+            ymax_group
+        )

@@ -70,3 +70,50 @@ class FallgesetzExperimentSkizze(Scene):
             g_label,
             zeit_gruppe
         )
+
+class WegZeitStroboskopSkizze(Scene):
+    def construct(self):
+        y_axis = Arrow(
+            start=LEFT * 2.0 + DOWN * 3.2,
+            end=LEFT * 2.0 + UP * 2.8,
+            buff=0,
+            color=WHITE
+        )
+        y_label = MathTex("y").next_to(y_axis.get_end(), UP, buff=0.15)
+
+        origin_mark = Line(start=LEFT * 2.2 + UP * 2.0, end=LEFT * 1.8 + UP * 2.0, color=GRAY, stroke_width=2)
+        origin_label = MathTex("y = 0", font_size=24).next_to(origin_mark, LEFT, buff=0.15)
+
+        times = [0, 1, 2, 3, 4]
+        positions = [0, 0.2, 0.8, 1.8, 3.2]
+
+        dots_group = VGroup()
+        for t, pos in zip(times, positions):
+            pt = LEFT * 2.0 + (UP * 2.0 + DOWN * pos)
+            dot = Dot(pt, radius=0.08, color=RED)
+            t_lbl = MathTex(f"t_{t}", font_size=20, color=RED).next_to(dot, RIGHT, buff=0.2)
+            dots_group.add(dot, t_lbl)
+
+        self.add(y_axis, y_label, origin_mark, origin_label, dots_group)
+
+
+class YTDiagrammVierterQuadrant(Scene):
+    def construct(self):
+        origin = LEFT * 3.0 + UP * 1.5
+
+        y_axis = Arrow(start=origin + UP * 1.0, end=origin + DOWN * 4.5, buff=0, color=WHITE)
+        y_label = MathTex("y").next_to(y_axis.get_end(), DOWN, buff=0.15)
+
+        x_axis = Arrow(start=origin + LEFT * 0.5, end=origin + RIGHT * 6.0, buff=0, color=WHITE)
+        x_label = MathTex("t").next_to(x_axis.get_end(), RIGHT, buff=0.15)
+
+        axes_group = VGroup(x_axis, y_axis, x_label, y_label)
+
+        parabel = ParametricFunction(
+            lambda t: origin + RIGHT * t + DOWN * (0.2 * t**2),
+            t_range=[0, 4.5],
+            stroke_width=4,
+            color=BLUE
+        )
+
+        self.add(axes_group, parabel)

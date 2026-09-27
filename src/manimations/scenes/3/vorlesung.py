@@ -140,3 +140,51 @@ class VTDiagrammVierterQuadrant(Scene):
         )
 
         self.add(axes_group, v0_label, gerade)
+
+class AufprallgeschwindigkeitAufbau(Scene):
+    def construct(self):
+        ebene = Line(start=LEFT * 3.5, end=RIGHT * 3.5, color=GRAY, stroke_width=4).shift(DOWN * 2.0)
+        ebene_schraffur = VGroup(*[
+            Line(
+                start=ebene.point_from_proportion(i / 14) + DOWN * 0.2 + LEFT * 0.1,
+                end=ebene.point_from_proportion(i / 14),
+                color=GRAY,
+                stroke_width=2
+            )
+            for i in range(15)
+        ])
+        boden_gruppe = VGroup(ebene, ebene_schraffur)
+
+        y_label_bottom = MathTex("y = -2\\,\\text{m}", font_size=24, color=WHITE).next_to(ebene, RIGHT, buff=0.3)
+
+        ball_start_pos = LEFT * 0.8 + UP * 2.0
+        ball_end_pos = LEFT * 0.8 + DOWN * 1.75
+
+        fall_linie = DashedLine(
+            start=ball_start_pos,
+            end=ball_end_pos,
+            color=WHITE,
+            stroke_width=2
+        )
+
+        ball = Circle(radius=0.25, fill_opacity=1, color=RED).move_to(ball_start_pos)
+        v0_label = MathTex("v = 0", font_size=26, color=RED).next_to(ball, UP, buff=0.2)
+
+        hoehe_pfeil = DoubleArrow(
+            start=RIGHT * 0.8 + UP * 2.0,
+            end=RIGHT * 0.8 + DOWN * 2.0,
+            buff=0,
+            color=YELLOW,
+            stroke_width=3
+        )
+        hoehe_label = MathTex("h = 2\\,\\text{m}", font_size=28, color=YELLOW).next_to(hoehe_pfeil, RIGHT, buff=0.2)
+
+        self.add(
+            boden_gruppe,
+            y_label_bottom,
+            fall_linie,
+            ball,
+            v0_label,
+            hoehe_pfeil,
+            hoehe_label
+        )

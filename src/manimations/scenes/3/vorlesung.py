@@ -702,3 +702,65 @@ class Skalarmultiplikation(Scene):
             vector_half_a, label_half_a,
             vector_neg_a, label_neg_a
         )
+
+class VektorBetragKomponenten(Scene):
+    def construct(self):
+        axes = Axes(
+            x_range=[-0.5, 6, 1],
+            y_range=[-0.5, 5, 1],
+            x_length=8.0,
+            y_length=6.0,
+            axis_config={"include_numbers": True, "color": GRAY_C},
+            tips=True
+        )
+
+        labels = axes.get_axis_labels(x_label="x", y_label="y")
+
+        origin = axes.c2p(0, 0)
+        ax_val, ay_val = 4.5, 3.5
+        point_a = axes.c2p(ax_val, ay_val)
+        point_ax = axes.c2p(ax_val, 0)
+        point_ay = axes.c2p(0, ay_val)
+
+        vector_a = Arrow(
+            start=origin,
+            end=point_a,
+            buff=0,
+            color=BLUE_C,
+            stroke_width=5,
+            max_tip_length_to_length_ratio=0.15
+        )
+        label_a = MathTex(r"\vec{a}", color=BLUE_C).next_to(
+            vector_a.get_center(), UP + LEFT, buff=0.15
+        )
+
+        dashed_x = DashedLine(start=point_a, end=point_ax, color=GRAY_A, stroke_width=3)
+        dashed_y = DashedLine(start=point_a, end=point_ay, color=GRAY_A, stroke_width=3)
+
+        arrow_ax = DoubleArrow(
+            start=axes.c2p(0, -0.2),
+            end=axes.c2p(ax_val, -0.2),
+            buff=0,
+            color=YELLOW_C,
+            stroke_width=3,
+            max_tip_length_to_length_ratio=0.1
+        )
+        label_ax = MathTex(r"a_x", color=YELLOW_C).next_to(arrow_ax.get_center(), DOWN, buff=0.1)
+
+        arrow_ay = DoubleArrow(
+            start=axes.c2p(-0.2, 0),
+            end=axes.c2p(-0.2, ay_val),
+            buff=0,
+            color=YELLOW_C,
+            stroke_width=3,
+            max_tip_length_to_length_ratio=0.1
+        )
+        label_ay = MathTex(r"a_y", color=YELLOW_C).next_to(arrow_ay.get_center(), LEFT, buff=0.1)
+
+        self.add(
+            axes, labels,
+            vector_a, label_a,
+            dashed_x, dashed_y,
+            arrow_ax, label_ax,
+            arrow_ay, label_ay
+        )

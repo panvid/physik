@@ -647,3 +647,58 @@ class VektorParallelogramm(Scene):
             vector_a_prime_group, label_a_prime,
             vector_b_prime_group, label_b_prime
         )
+
+class Skalarmultiplikation(Scene):
+    def construct(self):
+        base_dir = RIGHT * 1.2 + UP * 0.9
+
+        pos_a = LEFT * 5.0 + DOWN * 0.5
+        vector_a = Arrow(
+            start=pos_a,
+            end=pos_a + base_dir,
+            buff=0,
+            color=BLUE_C,
+            stroke_width=5,
+            max_tip_length_to_length_ratio=0.2
+        )
+        label_a = MathTex(r"\vec{a}", color=WHITE).next_to(vector_a.get_center(), UP + LEFT, buff=0.15)
+
+        pos_2a = LEFT * 2.2 + DOWN * 1.0
+        vector_2a = Arrow(
+            start=pos_2a,
+            end=pos_2a + 2.0 * base_dir,
+            buff=0,
+            color=GREEN_C,
+            stroke_width=5,
+            max_tip_length_to_length_ratio=0.12
+        )
+        label_2a = MathTex(r"2\vec{a}", color=WHITE).next_to(vector_2a.get_center(), UP + LEFT, buff=0.15)
+
+        pos_half_a = RIGHT * 1.8 + DOWN * 0.25
+        vector_half_a = Arrow(
+            start=pos_half_a,
+            end=pos_half_a + 0.5 * base_dir,
+            buff=0,
+            color=YELLOW_C,
+            stroke_width=5,
+            max_tip_length_to_length_ratio=0.35
+        )
+        label_half_a = MathTex(r"0{,}5\vec{a}", color=WHITE).next_to(vector_half_a.get_center(), UP + LEFT, buff=0.15)
+
+        pos_neg_a = RIGHT * 4.8 + UP * 0.5
+        vector_neg_a = Arrow(
+            start=pos_neg_a,
+            end=pos_neg_a - base_dir,
+            buff=0,
+            color=RED_C,
+            stroke_width=5,
+            max_tip_length_to_length_ratio=0.2
+        )
+        label_neg_a = MathTex(r"-\vec{a}", color=WHITE).next_to(vector_neg_a.get_center(), UP + RIGHT, buff=0.15)
+
+        self.add(
+            vector_a, label_a,
+            vector_2a, label_2a,
+            vector_half_a, label_half_a,
+            vector_neg_a, label_neg_a
+        )

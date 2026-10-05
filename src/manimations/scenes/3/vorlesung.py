@@ -453,3 +453,43 @@ class VektorDarstellungParallel(Scene):
         )
 
         self.add(vector, label_vector, brace, brace_text, pointer_arrow, direction_label)
+
+
+class VektorKonstellationen(Scene):
+    def construct(self):
+        a_start = LEFT * 4 + UP * 2.2
+        a_end = LEFT * 1.5 + UP * 2.8
+        vector_a = Arrow(start=a_start, end=a_end, buff=0, color=BLUE_C, stroke_width=4, max_tip_length_to_length_ratio=0.2)
+        label_a = MathTex(r"\vec{a}", color=WHITE).next_to(vector_a.get_center(), UP, buff=0.15)
+
+        shift_vec = RIGHT * 3.0 + DOWN * 0.6
+        b_start = a_start + shift_vec
+        b_end = a_end + shift_vec
+        vector_b = Arrow(start=b_start, end=b_end, buff=0, color=BLUE_C, stroke_width=4, max_tip_length_to_length_ratio=0.2)
+        label_b = MathTex(r"\vec{b}", color=WHITE).next_to(vector_b.get_center(), DOWN, buff=0.15)
+
+        v_start = LEFT * 4 + DOWN * 0.1
+        v_end = LEFT * 1.5 + UP * 0.5
+        vector_v = Arrow(start=v_start, end=v_end, buff=0, color=GREEN_C, stroke_width=4, max_tip_length_to_length_ratio=0.2)
+        label_v = MathTex(r"\vec{v}", color=WHITE).next_to(vector_v.get_center(), UP, buff=0.15)
+
+        w_start = RIGHT * 3.5 + UP * 0.1
+        w_end = RIGHT * 1.0 + DOWN * 0.5
+        vector_w = Arrow(start=w_start, end=w_end, buff=0, color=GREEN_C, stroke_width=4, max_tip_length_to_length_ratio=0.2)
+        label_w = MathTex(r"\vec{w}", color=WHITE).next_to(vector_w.get_center(), DOWN, buff=0.15)
+
+        e_start = LEFT * 4 + DOWN * 2.5
+        e_end = LEFT * 1.8 + DOWN * 1.8
+        vector_e = Arrow(start=e_start, end=e_end, buff=0, color=ORANGE, stroke_width=4, max_tip_length_to_length_ratio=0.2)
+        label_e = MathTex(r"\vec{e}", color=WHITE).next_to(vector_e.get_center(), UP, buff=0.15)
+
+        f_start = RIGHT * 0.5 + DOWN * 1.8
+        f_end = RIGHT * 2.5 + DOWN * 2.7
+        vector_f = Arrow(start=f_start, end=f_end, buff=0, color=ORANGE, stroke_width=4, max_tip_length_to_length_ratio=0.2)
+        label_f = MathTex(r"\vec{f}", color=WHITE).next_to(vector_f.get_center(), DOWN, buff=0.15)
+
+        self.add(
+            vector_a, label_a, vector_b, label_b,
+            vector_v, label_v, vector_w, label_w,
+            vector_e, label_e, vector_f, label_f
+        )

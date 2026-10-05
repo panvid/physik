@@ -954,3 +954,92 @@ class MomentangeschwindigkeitRaumkurve(Scene):
             curve,
             *vector_mobjects
         )
+
+class WaagerechterWurf(Scene):
+    def construct(self):
+        axes = Axes(
+            x_range=[-0.5, 7.5, 1],
+            y_range=[-5.5, 0.8, 1],
+            x_length=9.0,
+            y_length=6.0,
+            axis_config={"include_numbers": False, "color": GRAY_C},
+            tips=True
+        )
+
+        labels = axes.get_axis_labels(x_label="x", y_label="y")
+
+        origin = axes.c2p(0, 0)
+        xw_val = 6.0
+        h_val = 4.5
+
+        impact_point = axes.c2p(xw_val, -h_val)
+
+        v0_end = axes.c2p(2.2, 0)
+        vector_v0 = Arrow(
+            start=origin,
+            end=v0_end,
+            buff=0,
+            color=BLUE_C,
+            stroke_width=5,
+            max_tip_length_to_length_ratio=0.2
+        )
+        label_v0 = MathTex(r"\vec{v}_0", color=BLUE_C).next_to(vector_v0.get_center(), UP, buff=0.15)
+
+        parabola_smooth = axes.plot(
+            lambda x: -h_val * (x / xw_val) ** 2,
+            x_range=[0, xw_val],
+            color=WHITE
+        )
+        parabola = DashedVMobject(parabola_smooth, dashed_ratio=0.6)
+
+        ground = DashedLine(
+            start=axes.c2p(-0.5, -h_val),
+            end=axes.c2p(7.2, -h_val),
+            color=GRAY_A,
+            stroke_width=2
+        )
+
+        dot_start = Dot(origin, radius=0.08, color=RED_C)
+        dot_impact = Dot(impact_point, radius=0.08, color=RED_C)
+
+        label_curve = MathTex(r"\text{Bahnkurve } (y=y(x))", font_size=28, color=WHITE).move_to(
+            axes.c2p(2.8, -1.2)
+        )
+
+        label_impact = MathTex(r"A\ \text{(Auftreffpunkt)}", font_size=26, color=WHITE).next_to(
+            impact_point, DOWN + RIGHT, buff=0.15
+        )
+
+        height_arrow = DoubleArrow(
+            start=axes.c2p(-0.3, 0),
+            end=axes.c2p(-0.3, -h_val),
+            buff=0,
+            color=YELLOW_C,
+            stroke_width=3,
+            max_tip_length_to_length_ratio=0.1
+        )
+        label_h = MathTex("h", color=YELLOW_C).next_to(height_arrow.get_center(), LEFT, buff=0.15)
+
+        label_yh = MathTex("y = -h", color=GRAY_A, font_size=26).next_to(
+            axes.c2p(0, -h_val), LEFT, buff=0.2
+        )
+
+        width_arrow = DoubleArrow(
+            start=axes.c2p(0, 0.4),
+            end=axes.c2p(xw_val, 0.4),
+            buff=0,
+            color=GREEN_C,
+            stroke_width=3,
+            max_tip_length_to_length_ratio=0.1
+        )
+        label_xw = MathTex("x_w", color=GREEN_C).next_to(width_arrow.get_center(), UP, buff=0.1)
+
+        self.add(
+            axes, labels,
+            ground, parabola,
+            vector_v0, label_v0,
+            dot_start, dot_impact,
+            label_curve, label_impact,
+            height_arrow, label_h, label_yh,
+            width_arrow, label_xw
+        )

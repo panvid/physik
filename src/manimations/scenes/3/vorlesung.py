@@ -881,3 +881,76 @@ class BewegungImRaum(Scene):
             dot_p1, dot_p2,
             label_p1, label_p2
         )
+
+class MomentangeschwindigkeitRaumkurve(Scene):
+    def construct(self):
+        def proj(x, y, z):
+            return np.array([
+                0.85 * x - 0.70 * z,
+                0.75 * y - 0.45 * z,
+                0.0
+            ])
+
+        o = proj(0, 0, 0)
+        x_axis_end = proj(5.0, 0, 0)
+        y_axis_end = proj(0, 4.5, 0)
+        z_axis_end = proj(0, 0, 5.0)
+
+        axis_x = Arrow(o, x_axis_end, buff=0, color=GRAY_B, stroke_width=3, max_tip_length_to_length_ratio=0.1)
+        axis_y = Arrow(o, y_axis_end, buff=0, color=GRAY_B, stroke_width=3, max_tip_length_to_length_ratio=0.1)
+        axis_z = Arrow(o, z_axis_end, buff=0, color=GRAY_B, stroke_width=3, max_tip_length_to_length_ratio=0.1)
+
+        label_x = MathTex("x", color=GRAY_A).next_to(x_axis_end, RIGHT, buff=0.1)
+        label_y = MathTex("y", color=GRAY_A).next_to(y_axis_end, UP, buff=0.1)
+        label_z = MathTex("z", color=GRAY_A).next_to(z_axis_end, DOWN + LEFT, buff=0.1)
+
+        def r_3d(t):
+            cx = 0.5 + 4.0 * t
+            cy = 0.8 + 3.2 * (t ** 0.85) + 0.8 * np.sin(1.2 * np.pi * t)
+            cz = 0.3 + 2.5 * (t ** 1.3)
+            return np.array([cx, cy, cz])
+
+        def dr_3d(t, dt=1e-5):
+            return (r_3d(t + dt) - r_3d(t - dt)) / (2 * dt)
+
+        t_vals = np.linspace(0, 1, 120)
+        curve_points = [proj(*r_3d(t)) for t in t_vals]
+
+        curve = VMobject(color=WHITE, stroke_width=4)
+        curve.set_points_smoothly(curve_points)
+
+        t_points = [0.15, 0.40, 0.70, 0.92]
+        colors = [YELLOW_C, GREEN_C, ORANGE, RED_C]
+
+        vector_mobjects = []
+
+        for i, (t_val, col) in enumerate(zip(t_points, colors), start=1):
+            p_3d = r_3d(t_val)
+            v_3d = dr_3d(t_val)
+
+            v_dir = v_3d / np.linalg.norm(v_3d)
+            v_length = 1.2
+
+            pos_start = proj(*p_3d)
+            pos_end = proj(*(p_3d + v_dir * v_length))
+
+            dot = Dot(pos_start, radius=0.08, color=WHITE)
+
+            v_arrow = Arrow(
+                pos_start, pos_end,
+                buff=0,
+                color=col,
+                stroke_width=5,
+                max_tip_length_to_length_ratio=0.2
+            )
+
+            v_label = MathTex(rf"\vec{{v}}_{{{i}}}", color=col).next_to(v_arrow.get_end(), UP + RIGHT, buff=0.1)
+
+            vector_mobjects.extend([dot, v_arrow, v_label])
+
+        self.add(
+            axis_x, axis_y, axis_z,
+            label_x, label_y, label_z,
+            curve,
+            *vector_mobjects
+        )

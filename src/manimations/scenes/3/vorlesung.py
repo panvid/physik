@@ -454,7 +454,6 @@ class VektorDarstellungParallel(Scene):
 
         self.add(vector, label_vector, brace, brace_text, pointer_arrow, direction_label)
 
-
 class VektorKonstellationen(Scene):
     def construct(self):
         a_start = LEFT * 4 + UP * 2.2
@@ -493,3 +492,48 @@ class VektorKonstellationen(Scene):
             vector_v, label_v, vector_w, label_w,
             vector_e, label_e, vector_f, label_f
         )
+
+class VektorenImKoordinatensystem(Scene):
+    def construct(self):
+        axes = Axes(
+            x_range=[-1, 6, 1],
+            y_range=[-3, 4, 1],
+            x_length=8.5,
+            y_length=7.0,
+            axis_config={"include_numbers": True, "color": GRAY_C},
+            tips=True
+        )
+
+        labels = axes.get_axis_labels(x_label="x", y_label="y")
+
+        origin = axes.c2p(0, 0)
+        point_a = axes.c2p(5, 3)
+        point_b = axes.c2p(2, -2)
+
+        vector_a = Arrow(
+            start=origin,
+            end=point_a,
+            buff=0,
+            color=BLUE_C,
+            stroke_width=5,
+            max_tip_length_to_length_ratio=0.15
+        )
+
+        label_a = MathTex(r"\vec{a}", color=BLUE_C).next_to(
+            vector_a.get_corner(UP + RIGHT), UP + RIGHT, buff=0.1
+        )
+
+        vector_b = Arrow(
+            start=origin,
+            end=point_b,
+            buff=0,
+            color=GREEN_C,
+            stroke_width=5,
+            max_tip_length_to_length_ratio=0.15
+        )
+
+        label_b = MathTex(r"\vec{b}", color=GREEN_C).next_to(
+            vector_b.get_corner(DOWN + RIGHT), DOWN + RIGHT, buff=0.1
+        )
+
+        self.add(axes, labels, vector_a, label_a, vector_b, label_b)

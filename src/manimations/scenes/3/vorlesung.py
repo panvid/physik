@@ -814,3 +814,70 @@ class VektorZerlegung(Scene):
             dashed_b_parallel, dashed_c_parallel,
             line_b_extension, line_c_extension
         )
+
+class BewegungImRaum(Scene):
+    def construct(self):
+        def proj(x, y, z):
+            return np.array([
+                0.85 * x - 0.70 * z,
+                0.75 * y - 0.45 * z,
+                0.0
+            ])
+
+        o = proj(0, 0, 0)
+        x_axis_end = proj(4.5, 0, 0)
+        y_axis_end = proj(0, 4.0, 0)
+        z_axis_end = proj(0, 0, 4.5)
+
+        axis_x = Arrow(o, x_axis_end, buff=0, color=GRAY_B, stroke_width=3, max_tip_length_to_length_ratio=0.1)
+        axis_y = Arrow(o, y_axis_end, buff=0, color=GRAY_B, stroke_width=3, max_tip_length_to_length_ratio=0.1)
+        axis_z = Arrow(o, z_axis_end, buff=0, color=GRAY_B, stroke_width=3, max_tip_length_to_length_ratio=0.1)
+
+        label_x = MathTex("x", color=GRAY_A).next_to(x_axis_end, RIGHT, buff=0.1)
+        label_y = MathTex("y", color=GRAY_A).next_to(y_axis_end, UP, buff=0.1)
+        label_z = MathTex("z", color=GRAY_A).next_to(z_axis_end, DOWN + LEFT, buff=0.1)
+
+        t_vals = np.linspace(0, 1, 100)
+        curve_points = []
+        for t in t_vals:
+            cx = 0.5 + 3.0 * t
+            cy = 0.8 + 2.8 * (t ** 0.8) + 0.5 * np.sin(np.pi * t)
+            cz = 0.3 + 1.8 * (t ** 1.5)
+            curve_points.append(proj(cx, cy, cz))
+
+        curve = VMobject(color=WHITE, stroke_width=4)
+        curve.set_points_smoothly(curve_points)
+
+        t1, t2 = 0.25, 0.75
+
+        p1_3d = (0.5 + 3.0 * t1, 0.8 + 2.8 * (t1 ** 0.8) + 0.5 * np.sin(np.pi * t1), 0.3 + 1.8 * (t1 ** 1.5))
+        p2_3d = (0.5 + 3.0 * t2, 0.8 + 2.8 * (t2 ** 0.8) + 0.5 * np.sin(np.pi * t2), 0.3 + 1.8 * (t2 ** 1.5))
+
+        pos1 = proj(*p1_3d)
+        pos2 = proj(*p2_3d)
+
+        vector_a = Arrow(o, pos1, buff=0, color=BLUE_C, stroke_width=5, max_tip_length_to_length_ratio=0.15)
+        label_a = MathTex(r"\vec{a}", color=BLUE_C).next_to(vector_a.get_center(), LEFT, buff=0.15)
+
+        vector_b = Arrow(o, pos2, buff=0, color=GREEN_C, stroke_width=5, max_tip_length_to_length_ratio=0.15)
+        label_b = MathTex(r"\vec{b}", color=GREEN_C).next_to(vector_b.get_center(), RIGHT, buff=0.15)
+
+        vector_delta_r = Arrow(pos1, pos2, buff=0, color=RED_C, stroke_width=5, max_tip_length_to_length_ratio=0.2)
+        label_delta_r = MathTex(r"\Delta \vec{r}", color=RED_C).next_to(vector_delta_r.get_center(), UP, buff=0.15)
+
+        dot_p1 = Dot(pos1, radius=0.08, color=WHITE)
+        dot_p2 = Dot(pos2, radius=0.08, color=WHITE)
+
+        label_p1 = MathTex(r"P_1\ (\text{Zeitpunkt } t_1)", font_size=28, color=WHITE).next_to(pos1, UP + LEFT, buff=0.15)
+        label_p2 = MathTex(r"P_2\ (\text{Zeitpunkt } t_2)", font_size=28, color=WHITE).next_to(pos2, UP + RIGHT, buff=0.15)
+
+        self.add(
+            axis_x, axis_y, axis_z,
+            label_x, label_y, label_z,
+            curve,
+            vector_a, label_a,
+            vector_b, label_b,
+            vector_delta_r, label_delta_r,
+            dot_p1, dot_p2,
+            label_p1, label_p2
+        )

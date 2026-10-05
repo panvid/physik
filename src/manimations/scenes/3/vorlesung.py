@@ -595,3 +595,55 @@ class VektorAddition(Scene):
         )
 
         self.add(axes, labels, vector_a, label_a, vector_c, label_c, vector_b, label_b)
+
+class VektorParallelogramm(Scene):
+    def construct(self):
+        origin = LEFT * 2.5 + DOWN * 1.5
+        vec_a_coords = RIGHT * 4.5 + UP * 0.5
+        vec_b_coords = RIGHT * 1.5 + UP * 2.5
+        vec_c_coords = vec_a_coords + vec_b_coords
+
+        point_a = origin + vec_a_coords
+        point_b = origin + vec_b_coords
+        point_c = origin + vec_c_coords
+
+        vector_a = Arrow(
+            start=origin, end=point_a, buff=0, color=BLUE_C, stroke_width=5, max_tip_length_to_length_ratio=0.15
+        )
+        label_a = MathTex(r"\vec{a}", color=BLUE_C).next_to(vector_a.get_center(), DOWN, buff=0.15)
+
+        vector_b = Arrow(
+            start=origin, end=point_b, buff=0, color=GREEN_C, stroke_width=5, max_tip_length_to_length_ratio=0.15
+        )
+        label_b = MathTex(r"\vec{b}", color=GREEN_C).next_to(vector_b.get_center(), LEFT, buff=0.15)
+
+        vector_c = Arrow(
+            start=origin, end=point_c, buff=0, color=RED_C, stroke_width=5, max_tip_length_to_length_ratio=0.15
+        )
+        label_c = MathTex(r"\vec{c}", color=RED_C).next_to(vector_c.get_center(), UP + LEFT, buff=0.1)
+
+        vector_a_prime = DashedLine(
+            start=point_b, end=point_c, color=BLUE_C, stroke_width=3
+        )
+        tip_a_prime = Arrow(
+            start=point_c - (vec_a_coords * 0.1), end=point_c, buff=0, color=BLUE_C, stroke_width=3, max_tip_length_to_length_ratio=0.5
+        )
+        vector_a_prime_group = VGroup(vector_a_prime, tip_a_prime)
+        label_a_prime = MathTex(r"\vec{a}", color=BLUE_C).next_to(vector_a_prime.get_center(), UP, buff=0.15)
+
+        vector_b_prime = DashedLine(
+            start=point_a, end=point_c, color=GREEN_C, stroke_width=3
+        )
+        tip_b_prime = Arrow(
+            start=point_c - (vec_b_coords * 0.1), end=point_c, buff=0, color=GREEN_C, stroke_width=3, max_tip_length_to_length_ratio=0.5
+        )
+        vector_b_prime_group = VGroup(vector_b_prime, tip_b_prime)
+        label_b_prime = MathTex(r"\vec{b}", color=GREEN_C).next_to(vector_b_prime.get_center(), RIGHT, buff=0.15)
+
+        self.add(
+            vector_a, label_a,
+            vector_b, label_b,
+            vector_c, label_c,
+            vector_a_prime_group, label_a_prime,
+            vector_b_prime_group, label_b_prime
+        )

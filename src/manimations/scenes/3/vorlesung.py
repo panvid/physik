@@ -409,3 +409,47 @@ class BahnkurveVektorenDiagramm(Scene):
             r1_arrow, r1_label, dot1,
             r2_arrow, r2_label, dot2
         )
+
+class VektorDarstellungParallel(Scene):
+    def construct(self):
+        start = LEFT * 2.5 + DOWN * 1.5
+        end = RIGHT * 2.5 + UP * 1.5
+
+        vector = Arrow(
+            start=start,
+            end=end,
+            buff=0,
+            color=BLUE_C,
+            stroke_width=6,
+            max_tip_length_to_length_ratio=0.15
+        )
+
+        label_vector = MathTex(r"\vec{a}", color=WHITE).next_to(
+            vector.get_center(), UP + LEFT, buff=0.2
+        )
+
+        direction_vec = end - start
+        normal_vec = np.array([direction_vec[1], -direction_vec[0], 0])
+        normal_vec = normal_vec / np.linalg.norm(normal_vec)
+
+        brace = BraceBetweenPoints(start, end, direction=normal_vec, color=GRAY_A)
+        brace_text = brace.get_tex(r"\hat{=}\text{ Betrag}")
+        brace_text.scale(0.8).set_color(WHITE)
+
+        tip_point = vector.get_end()
+        info_pos = tip_point + RIGHT * 2.2 + UP * 0.8
+
+        pointer_arrow = Arrow(
+            start=info_pos + LEFT * 0.4 + DOWN * 0.2,
+            end=tip_point + RIGHT * 0.1 + UP * 0.1,
+            buff=0.05,
+            color=YELLOW_C,
+            stroke_width=3,
+            max_tip_length_to_length_ratio=0.2
+        )
+
+        direction_label = Text("Richtung", font_size=28, color=YELLOW_C).next_to(
+            info_pos, UP, buff=0.1
+        )
+
+        self.add(vector, label_vector, brace, brace_text, pointer_arrow, direction_label)

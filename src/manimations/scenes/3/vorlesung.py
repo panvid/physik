@@ -537,3 +537,61 @@ class VektorenImKoordinatensystem(Scene):
         )
 
         self.add(axes, labels, vector_a, label_a, vector_b, label_b)
+
+class VektorAddition(Scene):
+    def construct(self):
+        axes = Axes(
+            x_range=[-1, 8, 1],
+            y_range=[-1, 4, 1],
+            x_length=9.0,
+            y_length=5.0,
+            axis_config={"include_numbers": True, "color": GRAY_C},
+            tips=True
+        )
+
+        labels = axes.get_axis_labels(x_label="x", y_label="y")
+
+        origin = axes.c2p(0, 0)
+        point_a = axes.c2p(5, 3)
+        point_c = axes.c2p(7, 1)
+
+        vector_a = Arrow(
+            start=origin,
+            end=point_a,
+            buff=0,
+            color=BLUE_C,
+            stroke_width=5,
+            max_tip_length_to_length_ratio=0.15
+        )
+
+        label_a = MathTex(r"\vec{a}", color=BLUE_C).next_to(
+            vector_a.get_center(), UP + LEFT, buff=0.15
+        )
+
+        vector_c = Arrow(
+            start=origin,
+            end=point_c,
+            buff=0,
+            color=RED_C,
+            stroke_width=5,
+            max_tip_length_to_length_ratio=0.15
+        )
+
+        label_c = MathTex(r"\vec{c}", color=RED_C).next_to(
+            vector_c.get_center(), DOWN + RIGHT, buff=0.15
+        )
+
+        vector_b = Arrow(
+            start=point_a,
+            end=point_c,
+            buff=0,
+            color=GREEN_C,
+            stroke_width=5,
+            max_tip_length_to_length_ratio=0.15
+        )
+
+        label_b = MathTex(r"\vec{b}", color=GREEN_C).next_to(
+            vector_b.get_center(), UP + RIGHT, buff=0.15
+        )
+
+        self.add(axes, labels, vector_a, label_a, vector_c, label_c, vector_b, label_b)

@@ -764,3 +764,53 @@ class VektorBetragKomponenten(Scene):
             arrow_ax, label_ax,
             arrow_ay, label_ay
         )
+
+
+class VektorZerlegung(Scene):
+    def construct(self):
+        origin = LEFT * 2.5 + DOWN * 1.5
+
+        dir_b = RIGHT * 4.2 + UP * 0.7
+        dir_c = RIGHT * 1.2 + UP * 2.8
+
+        point_a = origin + dir_b + dir_c
+        point_b = origin + dir_b
+        point_c = origin + dir_c
+
+        vector_a = Arrow(
+            start=origin, end=point_a, buff=0, color=RED_C, stroke_width=6, max_tip_length_to_length_ratio=0.12
+        )
+        label_a = MathTex(r"\vec{a}", color=RED_C).next_to(vector_a.get_center(), UP + LEFT, buff=0.1)
+
+        vector_b = Arrow(
+            start=origin, end=point_b, buff=0, color=BLUE_C, stroke_width=5, max_tip_length_to_length_ratio=0.15
+        )
+        label_b = MathTex(r"\vec{b}", color=BLUE_C).next_to(vector_b.get_center(), DOWN, buff=0.15)
+
+        vector_c = Arrow(
+            start=origin, end=point_c, buff=0, color=GREEN_C, stroke_width=5, max_tip_length_to_length_ratio=0.15
+        )
+        label_c = MathTex(r"\vec{c}", color=GREEN_C).next_to(vector_c.get_center(), LEFT, buff=0.15)
+
+        dashed_b_parallel = DashedLine(
+            start=point_c, end=point_a, color=BLUE_B, stroke_width=3
+        )
+
+        dashed_c_parallel = DashedLine(
+            start=point_b, end=point_a, color=GREEN_B, stroke_width=3
+        )
+
+        line_b_extension = DashedLine(
+            start=point_b, end=point_b + (dir_b * 0.3), color=GRAY_B, stroke_width=2
+        )
+        line_c_extension = DashedLine(
+            start=point_c, end=point_c + (dir_c * 0.3), color=GRAY_B, stroke_width=2
+        )
+
+        self.add(
+            vector_b, label_b,
+            vector_c, label_c,
+            vector_a, label_a,
+            dashed_b_parallel, dashed_c_parallel,
+            line_b_extension, line_c_extension
+        )

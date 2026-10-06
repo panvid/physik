@@ -1043,3 +1043,59 @@ class WaagerechterWurf(Scene):
             height_arrow, label_h, label_yh,
             width_arrow, label_xw
         )
+
+class WurfzeitVergleichOhneKS(Scene):
+    def construct(self):
+        start_fall = LEFT * 3.5 + UP * 2.5
+        xw_total = 7.0
+        h_total = 5.0
+
+        t_steps = [0.0, 0.3, 0.55, 0.78, 1.0]
+
+        curve_points = [
+            start_fall + RIGHT * (xw_total * t) + DOWN * (h_total * (t ** 2))
+            for t in np.linspace(0, 1, 100)
+        ]
+
+        parabola_smooth = VMobject(color=WHITE, stroke_width=3)
+        parabola_smooth.set_points_smoothly(curve_points)
+        parabola = DashedVMobject(parabola_smooth, dashed_ratio=0.5)
+
+        elements = []
+
+        for i, t in enumerate(t_steps):
+            y_offset = DOWN * (h_total * (t ** 2))
+            x_offset = RIGHT * (xw_total * t)
+
+            pt_fall = start_fall + y_offset
+            pt_throw = start_fall + x_offset + y_offset
+
+            if i > 0:
+                hline = DashedLine(
+                    start=pt_fall,
+                    end=pt_throw,
+                    color=GRAY_B,
+                    stroke_width=2,
+                    dash_length=0.1
+                )
+                elements.append(hline)
+
+            dot_f = Dot(pt_fall, radius=0.09, color=RED_C)
+            dot_t = Dot(pt_throw, radius=0.09, color=BLUE_C)
+
+            elements.extend([dot_f, dot_t])
+
+        label_fall = Text("freier Fall", font_size=28, color=RED_C).next_to(
+            start_fall + DOWN * (h_total * 0.5), LEFT, buff=0.4
+        )
+
+        label_throw = Text("waagerechter Wurf", font_size=28, color=BLUE_C).next_to(
+            start_fall + RIGHT * (xw_total * 0.5) + DOWN * (h_total * 0.25), UP + RIGHT, buff=0.2
+        )
+
+        self.add(
+            parabola,
+            *elements,
+            label_fall,
+            label_throw
+        )

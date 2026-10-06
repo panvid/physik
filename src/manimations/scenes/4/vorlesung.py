@@ -321,3 +321,84 @@ class WilhelmTellKomplettSichtbar(Scene):
             dist_arrow, label_dist,
             dashed_x_proj, dashed_origin_proj
         )
+
+class WilhelmTellZweiParabeln(Scene):
+    def construct(self):
+        axes = Axes(
+            x_range=[-3, 29, 5],
+            y_range=[-3, 4.5, 1],
+            x_length=11.5,
+            y_length=5.8,
+            axis_config={"include_numbers": False, "color": GRAY_C},
+            tips=True
+        )
+
+        labels = axes.get_axis_labels(x_label="x", y_label="y")
+
+        origin = axes.c2p(0, 0)
+        x_target_val = 25.0
+        y_target_val = -1.0
+        v0_val = 30.0
+        g_val = 9.81
+
+        term_val = (g_val * (x_target_val ** 2)) / (v0_val ** 2)
+
+        alpha1_rad = math.atan(
+            (x_target_val + math.sqrt(x_target_val ** 2 - 2 * y_target_val * term_val - term_val ** 2)) / term_val
+        )
+        alpha2_rad = math.atan(
+            (x_target_val - math.sqrt(x_target_val ** 2 - 2 * y_target_val * term_val - term_val ** 2)) / term_val
+        )
+
+        parabola_flat_smooth = axes.plot(
+            lambda x: math.tan(alpha2_rad) * x - (g_val / (2 * (v0_val * math.cos(alpha2_rad)) ** 2)) * (x ** 2),
+            x_range=[0, x_target_val],
+            color=BLUE_C
+        )
+        parabola_flat = DashedVMobject(parabola_flat_smooth, dashed_ratio=0.5)
+
+        parabola_high_smooth = axes.plot(
+            lambda x: math.tan(alpha1_rad) * x - (g_val / (2 * (v0_val * math.cos(alpha1_rad)) ** 2)) * (x ** 2),
+            x_range=[0, x_target_val],
+            color=RED_C
+        )
+        parabola_high = DashedVMobject(parabola_high_smooth, dashed_ratio=0.5)
+
+        arc_alpha2 = Arc(
+            radius=1.3,
+            start_angle=0,
+            angle=alpha2_rad,
+            arc_center=origin,
+            color=YELLOW_C,
+            stroke_width=3
+        )
+        label_alpha2 = MathTex(r"\alpha_2", color=YELLOW_C).move_to(
+            axes.c2p(1.7 * math.cos(alpha2_rad / 2), 1.7 * math.sin(alpha2_rad / 2))
+        )
+
+        def make_stickman(color=WHITE):
+            head = Circle(radius=0.2, color=color)
+            body = Line(head.get_bottom(), head.get_bottom() + DOWN * 0.5, color=color)
+            left_leg = Line(body.get_end(), body.get_end() + DOWN * 0.4 + LEFT * 0.2, color=color)
+            right_leg = Line(body.get_end(), body.get_end() + DOWN * 0.4 + RIGHT * 0.2, color=color)
+            left_arm = Line(body.get_center(), body.get_center() + UP * 0.1 + LEFT * 0.3, color=color)
+            right_arm = Line(body.get_center(), body.get_center() + UP * 0.1 + RIGHT * 0.3, color=color)
+            return VGroup(head, body, left_leg, right_leg, left_arm, right_arm)
+
+        tell = make_stickman(color=GREEN_C)
+        tell.scale(0.7).move_to(axes.c2p(-1.5, -0.6))
+
+        target_point = axes.c2p(x_target_val, y_target_val)
+        target_person = make_stickman(color=RED_C)
+        target_person.scale(0.7)
+        target_person.move_to(target_point + DOWN * target_person.height / 2)
+
+        head_center_target = target_point + DOWN * 0.14
+        dot_target = Dot(head_center_target, radius=0.08, color=RED_C)
+
+        self.add(
+            axes, labels,
+            parabola_high, parabola_flat,
+            arc_alpha2, label_alpha2,
+            tell, target_person, dot_target
+        )

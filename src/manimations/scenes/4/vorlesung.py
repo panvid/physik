@@ -1101,3 +1101,78 @@ class KraefteParallelogrammHorizontalPraszise(Scene):
             arc_beta_bottom, label_beta_bottom,
             dot_origin, dot_f1, dot_f2
         )
+
+class KraeftedreieckKosinussatzInnenwinkel(Scene):
+    def construct(self):
+        origin = LEFT * 3.5 + DOWN * 0.5
+
+        length_f1 = 4.5
+        length_f2 = 4.5
+        alpha_deg = 50
+        beta_deg = alpha_deg / 2
+        beta_rad = math.radians(beta_deg)
+
+        length_f = length_f1 * math.cos(beta_rad) + length_f2 * math.cos(beta_rad)
+
+        end_f1 = origin + RIGHT * (length_f1 * math.cos(beta_rad)) + UP * (length_f1 * math.sin(beta_rad))
+        end_f = origin + RIGHT * length_f
+
+        arrow_f1 = Arrow(
+            start=origin,
+            end=end_f1,
+            buff=0,
+            color=BLUE_C,
+            stroke_width=6,
+            max_tip_length_to_length_ratio=0.18
+        )
+        label_f1 = MathTex(r"\vec{F}_1", color=BLUE_C, font_size=38).next_to(arrow_f1.get_center(), UP + LEFT, buff=0.15)
+
+        arrow_f2 = Arrow(
+            start=end_f1,
+            end=end_f,
+            buff=0,
+            color=GREEN_C,
+            stroke_width=6,
+            max_tip_length_to_length_ratio=0.18
+        )
+        label_f2 = MathTex(r"\vec{F}_2", color=GREEN_C, font_size=38).next_to(arrow_f2.get_center(), UP + RIGHT, buff=0.15)
+
+        arrow_f = Arrow(
+            start=origin,
+            end=end_f,
+            buff=0,
+            color=RED_C,
+            stroke_width=6,
+            max_tip_length_to_length_ratio=0.12
+        )
+        label_f = MathTex(r"\vec{F}", color=RED_C, font_size=40).next_to(arrow_f.get_center(), DOWN, buff=0.15)
+
+        angle_f1_inward = math.pi + beta_rad
+        angle_f2_inward = math.pi + (math.pi - beta_rad)
+
+        arc_top_angle = Arc(
+            radius=0.9,
+            start_angle=angle_f1_inward,
+            angle=angle_f2_inward - angle_f1_inward,
+            arc_center=end_f1,
+            color=YELLOW_C,
+            stroke_width=3
+        )
+
+        label_top_angle = MathTex(
+            r"\gamma + \beta = 180^\circ - \alpha",
+            color=YELLOW_C,
+            font_size=28
+        ).move_to(end_f1 + DOWN * 1.0)
+
+        dot_origin = Dot(origin, radius=0.08, color=WHITE)
+        dot_f1 = Dot(end_f1, radius=0.08, color=BLUE_C)
+        dot_f = Dot(end_f, radius=0.08, color=RED_C)
+
+        self.add(
+            arrow_f1, label_f1,
+            arrow_f2, label_f2,
+            arrow_f, label_f,
+            arc_top_angle, label_top_angle,
+            dot_origin, dot_f1, dot_f
+        )

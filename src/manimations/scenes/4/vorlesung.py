@@ -772,3 +772,61 @@ class ParalleleKraefte(Scene):
             arrow_f1, label_f1, dot_f1,
             arrow_f2, label_f2, dot_f2
         )
+
+class KraefteAdditionParallel(Scene):
+    def construct(self):
+        start_f1 = LEFT * 4.0 + UP * 1.0
+        length_f1 = 3.0
+        end_f1 = start_f1 + RIGHT * length_f1
+
+        start_f2 = end_f1
+        length_f2 = 2.0
+        end_f2 = start_f2 + RIGHT * length_f2
+
+        arrow_f1 = Arrow(
+            start=start_f1,
+            end=end_f1,
+            buff=0,
+            color=BLUE_C,
+            stroke_width=6,
+            max_tip_length_to_length_ratio=0.18
+        )
+        label_f1 = MathTex(r"\vec{F}_1", color=BLUE_C, font_size=42).next_to(arrow_f1.get_center(), UP, buff=0.15)
+
+        arrow_f2 = Arrow(
+            start=start_f2,
+            end=end_f2,
+            buff=0,
+            color=GREEN_C,
+            stroke_width=6,
+            max_tip_length_to_length_ratio=0.25
+        )
+        label_f2 = MathTex(r"\vec{F}_2", color=GREEN_C, font_size=42).next_to(arrow_f2.get_center(), UP, buff=0.15)
+
+        start_f = LEFT * 4.0 + DOWN * 1.0
+        length_f = length_f1 + length_f2
+        end_f = start_f + RIGHT * length_f
+
+        arrow_f = Arrow(
+            start=start_f,
+            end=end_f,
+            buff=0,
+            color=RED_C,
+            stroke_width=6,
+            max_tip_length_to_length_ratio=0.12
+        )
+        label_f = MathTex(r"\vec{F}", color=RED_C, font_size=42).next_to(arrow_f.get_center(), DOWN, buff=0.15)
+
+        dot_f1 = Dot(start_f1, radius=0.09, color=WHITE)
+        dot_f2 = Dot(start_f2, radius=0.09, color=WHITE)
+        dot_f = Dot(start_f, radius=0.09, color=WHITE)
+
+        dashed_start = DashedLine(start=start_f1, end=start_f, color=GRAY_B, stroke_width=2)
+        dashed_end = DashedLine(start=end_f2, end=end_f, color=GRAY_B, stroke_width=2)
+
+        self.add(
+            arrow_f1, label_f1, dot_f1,
+            arrow_f2, label_f2, dot_f2,
+            arrow_f, label_f, dot_f,
+            dashed_start, dashed_end
+        )

@@ -475,3 +475,134 @@ class WilhelmTellZweiParabeln(Scene):
             arc_alpha2, label_alpha2,
             tell, target_person, dot_target
         )
+
+class AffenschussDritterQuadrant(Scene):
+    def construct(self):
+        axes = Axes(
+            x_range=[-5, 25, 5],
+            y_range=[-4, 10, 2],
+            x_length=11.5,
+            y_length=6.0,
+            axis_config={"include_numbers": False, "color": GRAY_C},
+            tips=True
+        )
+
+        labels = axes.get_axis_labels(x_label="x", y_label="y")
+
+        x_gun = -3.0
+        y_gun = -2.0
+        pt_gun = axes.c2p(x_gun, y_gun)
+
+        x_monkey = 20.0
+        y_monkey_start = 8.0
+        v0_val = 28.0
+        g_val = 9.81
+
+        dx = x_monkey - x_gun
+        dy = y_monkey_start - y_gun
+        alpha_rad = math.atan(dy / dx)
+
+        v0_len = 2.8
+        v0_end = axes.c2p(
+            x_gun + v0_len * math.cos(alpha_rad),
+            y_gun + v0_len * math.sin(alpha_rad)
+        )
+
+        arrow_v0 = Arrow(
+            start=pt_gun,
+            end=v0_end,
+            buff=0,
+            color=BLUE_C,
+            stroke_width=5,
+            max_tip_length_to_length_ratio=0.18
+        )
+        label_v0 = MathTex(r"\vec{v}_0", color=BLUE_C).next_to(arrow_v0.get_end(), UP + LEFT, buff=0.1)
+
+        arc_alpha = Arc(
+            radius=1.0,
+            start_angle=0,
+            angle=alpha_rad,
+            arc_center=pt_gun,
+            color=YELLOW_C,
+            stroke_width=3
+        )
+        label_alpha = MathTex(r"\alpha", color=YELLOW_C).move_to(
+            axes.c2p(x_gun + 1.4 * math.cos(alpha_rad / 2), y_gun + 1.4 * math.sin(alpha_rad / 2))
+        )
+
+        line_of_sight = DashedLine(
+            start=pt_gun,
+            end=axes.c2p(x_monkey, y_monkey_start),
+            color=GRAY_B,
+            stroke_width=1.5
+        )
+
+        t_hit = dx / (v0_val * math.cos(alpha_rad))
+
+        parabola_smooth = axes.plot(
+            lambda x: y_gun + math.tan(alpha_rad) * (x - x_gun) - (g_val / (2 * (v0_val * math.cos(alpha_rad)) ** 2)) * ((x - x_gun) ** 2),
+            x_range=[x_gun, x_monkey],
+            color=WHITE
+        )
+        parabola = DashedVMobject(parabola_smooth, dashed_ratio=0.5)
+
+        monkey_t_vals = [0.0, 0.3, 0.55, 0.78, 1.0]
+        monkey_dots = []
+
+        for t_ratio in monkey_t_vals:
+            t_curr = t_ratio * t_hit
+            y_curr = y_monkey_start - 0.5 * g_val * (t_curr ** 2)
+            pt = axes.c2p(x_monkey, y_curr)
+            dot = Dot(pt, radius=0.08, color=RED_C)
+            monkey_dots.append(dot)
+
+        label_monkey = MathTex(r"A\ \text{(Affe)}", color=RED_C, font_size=26).next_to(
+            monkey_dots[0], UP + RIGHT, buff=0.15
+        )
+
+        arrow_h = DoubleArrow(
+            start=axes.c2p(x_monkey + 1.8, 0),
+            end=axes.c2p(x_monkey + 1.8, y_monkey_start),
+            buff=0,
+            color=YELLOW_C,
+            stroke_width=3,
+            max_tip_length_to_length_ratio=0.08
+        )
+        label_h = MathTex("h", color=YELLOW_C).next_to(arrow_h.get_center(), RIGHT, buff=0.15)
+
+        dashed_h_bottom = DashedLine(
+            start=axes.c2p(x_monkey, 0),
+            end=axes.c2p(x_monkey + 1.8, 0),
+            color=GRAY_B,
+            stroke_width=2
+        )
+        dashed_h_top = DashedLine(
+            start=axes.c2p(x_monkey, y_monkey_start),
+            end=axes.c2p(x_monkey + 1.8, y_monkey_start),
+            color=GRAY_B,
+            stroke_width=2
+        )
+
+        def make_gun():
+            barrel = Rectangle(height=0.15, width=0.8, color=GREEN_C, fill_opacity=0.8)
+            stock = Line(barrel.get_bottom() + LEFT * 0.2, barrel.get_bottom() + LEFT * 0.4 + DOWN * 0.3, color=GREEN_C, stroke_width=4)
+            gun_grp = VGroup(barrel, stock)
+            gun_grp.rotate(alpha_rad, about_point=gun_grp.get_left())
+            gun_grp.move_to(pt_gun, aligned_edge=LEFT)
+            return gun_grp
+
+        gun = make_gun()
+
+        dot_gun_start = Dot(pt_gun, radius=0.08, color=GREEN_C)
+
+        self.add(
+            axes, labels,
+            line_of_sight,
+            parabola,
+            arrow_v0, label_v0,
+            arc_alpha, label_alpha,
+            gun, dot_gun_start,
+            *monkey_dots, label_monkey,
+            arrow_h, label_h,
+            dashed_h_bottom, dashed_h_top
+        )

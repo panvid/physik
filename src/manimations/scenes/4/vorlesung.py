@@ -322,6 +322,79 @@ class WilhelmTellKomplettSichtbar(Scene):
             dashed_x_proj, dashed_origin_proj
         )
 
+class EinheitskreisVierQuadranten(Scene):
+    def construct(self):
+        axes = Axes(
+            x_range=[-1.4, 1.4, 0.5],
+            y_range=[-1.4, 1.4, 0.5],
+            x_length=6.5,
+            y_length=6.5,
+            axis_config={"include_numbers": False, "color": GRAY_C},
+            tips=True
+        )
+
+        labels = axes.get_axis_labels(x_label="x", y_label="y")
+
+        origin = axes.c2p(0, 0)
+
+        circle = Circle(
+            radius=axes.c2p(1, 0)[0] - origin[0],
+            color=GRAY_A,
+            stroke_width=2
+        ).move_to(origin)
+
+        alpha_deg = 35
+        alpha_rad = math.radians(alpha_deg)
+
+        cos_val = math.cos(alpha_rad)
+        sin_val = math.sin(alpha_rad)
+
+        pt_cos = axes.c2p(cos_val, 0)
+        pt_circle = axes.c2p(cos_val, sin_val)
+
+        line_hypotenuse = Line(start=origin, end=pt_circle, color=WHITE, stroke_width=4)
+        label_hypotenuse = MathTex("1", color=WHITE).next_to(line_hypotenuse.get_center(), UP + LEFT, buff=0.1)
+
+        line_cos = Line(start=origin, end=pt_cos, color=BLUE_C, stroke_width=4)
+        label_cos = MathTex(r"\cos(\alpha)", color=BLUE_C).next_to(line_cos.get_center(), DOWN, buff=0.15)
+
+        line_sin = Line(start=pt_cos, end=pt_circle, color=GREEN_C, stroke_width=4)
+        label_sin = MathTex(r"\sin(\alpha)", color=GREEN_C).next_to(line_sin.get_center(), RIGHT, buff=0.15)
+
+        arc_alpha = Arc(
+            radius=0.7,
+            start_angle=0,
+            angle=alpha_rad,
+            arc_center=origin,
+            color=YELLOW_C,
+            stroke_width=3
+        )
+        label_alpha = MathTex(r"\alpha", color=YELLOW_C).move_to(
+            axes.c2p(0.25 * math.cos(alpha_rad / 2), 0.25 * math.sin(alpha_rad / 2))
+        )
+
+        right_angle = RightAngle(
+            line_cos,
+            line_sin,
+            length=0.25,
+            color=GRAY_A,
+            stroke_width=2
+        )
+
+        dot_origin = Dot(origin, radius=0.06, color=WHITE)
+        dot_circle = Dot(pt_circle, radius=0.06, color=WHITE)
+
+        self.add(
+            axes, labels,
+            circle,
+            line_cos, label_cos,
+            line_sin, label_sin,
+            line_hypotenuse, label_hypotenuse,
+            arc_alpha, label_alpha,
+            right_angle,
+            dot_origin, dot_circle
+        )
+
 class WilhelmTellZweiParabeln(Scene):
     def construct(self):
         axes = Axes(

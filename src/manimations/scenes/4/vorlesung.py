@@ -606,3 +606,92 @@ class AffenschussDritterQuadrant(Scene):
             arrow_h, label_h,
             dashed_h_bottom, dashed_h_top
         )
+
+class AffenschussSuperposition(Scene):
+    def construct(self):
+        axes = Axes(
+            x_range=[0, 10, 1],
+            y_range=[0, 7, 1],
+            x_length=11.5,
+            y_length=6.0,
+            axis_config={"include_numbers": False, "color": GRAY_C},
+            tips=True
+        )
+
+        x_max = 8.5
+        y_target = 6.0
+        g_factor = 4.5
+
+        line_of_sight = DashedLine(
+            start=axes.c2p(0, 0),
+            end=axes.c2p(x_max, y_target),
+            color=GRAY_B,
+            stroke_width=2
+        )
+
+        parabola_smooth = axes.plot(
+            lambda x: (y_target / x_max) * x - (g_factor / (x_max ** 2)) * (x ** 2),
+            x_range=[0, x_max],
+            color=WHITE
+        )
+        parabola = DashedVMobject(parabola_smooth, dashed_ratio=0.5)
+
+        t_vals = [0.0, 0.25, 0.5, 0.75, 1.0]
+
+        vertical_lines = []
+        dots_linear = []
+        dots_parabola = []
+
+        for t in t_vals:
+            x_val = x_max * t
+            y_lin = y_target * t
+            y_par = y_lin - g_factor * (t ** 2)
+
+            pt_lin = axes.c2p(x_val, y_lin)
+            pt_par = axes.c2p(x_val, y_par)
+
+            if t > 0:
+                vert_line = DashedLine(
+                    start=pt_lin,
+                    end=pt_par,
+                    color=RED_C,
+                    stroke_width=2,
+                    dash_length=0.08
+                )
+                vertical_lines.append(vert_line)
+
+            dot_lin = Dot(pt_lin, radius=0.07, color=BLUE_C)
+            dot_par = Dot(pt_par, radius=0.07, color=YELLOW_C)
+
+            dots_linear.append(dot_lin)
+            dots_parabola.append(dot_par)
+
+        monkey_fall_dots = []
+        for t in t_vals:
+            y_pos = y_target - g_factor * (t ** 2)
+            pt = axes.c2p(x_max, y_pos)
+            dot = Dot(pt, radius=0.08, color=RED_C)
+            monkey_fall_dots.append(dot)
+
+        label_linear = Text("Ungestörte Visierlinie", font_size=20, color=BLUE_C).next_to(
+            dots_linear[-2], UP + LEFT, buff=0.1
+        )
+        label_parabola = Text("Tatsächliche Schussbahn", font_size=20, color=YELLOW_C).next_to(
+            dots_parabola[2], DOWN + RIGHT, buff=0.1
+        )
+        label_monkey = Text("Affe (freier Fall)", font_size=20, color=RED_C).next_to(
+            monkey_fall_dots[0], UP + LEFT, buff=0.15
+        )
+
+        self.add(
+            axes,
+            line_of_sight,
+            parabola,
+            *vertical_lines,
+            *dots_linear,
+            *dots_parabola,
+            *monkey_fall_dots,
+            label_linear,
+            label_parabola,
+            label_monkey
+        )

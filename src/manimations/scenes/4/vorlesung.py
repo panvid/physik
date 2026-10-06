@@ -756,7 +756,7 @@ class ParalleleKraefte(Scene):
         label_f1 = MathTex(r"\vec{F}_1", color=BLUE_C, font_size=42).next_to(arrow_f1.get_start(), LEFT, buff=0.2)
 
         arrow_f2 = Arrow(
-            start=start_start_f2 if "start_start_f2" in locals() else start_f2,
+            start=start_f2,
             end=end_f2,
             buff=0,
             color=RED_C,

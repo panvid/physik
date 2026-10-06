@@ -217,3 +217,107 @@ class GeschwindigkeitsZerlegung(Scene):
             arrow_v, label_v,
             arc_alpha, label_alpha
         )
+
+class WilhelmTellKomplettSichtbar(Scene):
+    def construct(self):
+        axes = Axes(
+            x_range=[-3, 28, 5],
+            y_range=[-3, 4.5, 1],
+            x_length=11.5,
+            y_length=5.8,
+            axis_config={"include_numbers": False, "color": GRAY_C},
+            tips=True
+        )
+
+        labels = axes.get_axis_labels(x_label="x", y_label="y")
+
+        origin = axes.c2p(0, 0)
+        x_target_val = 25.0
+        y_target_val = -1.0
+        v0_val = 30.0
+        g_val = 9.81
+
+        v0_len = 2.8
+        term_val = (g_val * (x_target_val ** 2)) / (v0_val ** 2)
+        alpha_rad = math.atan(
+            (x_target_val - math.sqrt(x_target_val ** 2 - 2 * y_target_val * term_val - term_val ** 2)) / term_val
+        )
+
+        v0_end = axes.c2p(v0_len * math.cos(alpha_rad), v0_len * math.sin(alpha_rad))
+
+        arrow_v0 = Arrow(
+            start=origin,
+            end=v0_end,
+            buff=0,
+            color=BLUE_C,
+            stroke_width=5,
+            max_tip_length_to_length_ratio=0.18
+        )
+        label_v0 = MathTex(r"\vec{v}_0 = 30\text{ m/s}", color=BLUE_C).next_to(arrow_v0.get_end(), UP + RIGHT, buff=0.1)
+
+        arc_alpha = Arc(
+            radius=1.1,
+            start_angle=0,
+            angle=alpha_rad,
+            arc_center=origin,
+            color=YELLOW_C,
+            stroke_width=3
+        )
+        label_alpha = MathTex(r"\alpha", color=YELLOW_C).move_to(
+            axes.c2p(1.5 * math.cos(alpha_rad / 2), 1.5 * math.sin(alpha_rad / 2))
+        )
+
+        parabola_smooth = axes.plot(
+            lambda x: math.tan(alpha_rad) * x - (g_val / (2 * (v0_val * math.cos(alpha_rad)) ** 2)) * (x ** 2),
+            x_range=[0, x_target_val],
+            color=WHITE
+        )
+        parabola = DashedVMobject(parabola_smooth, dashed_ratio=0.5)
+
+        def make_stickman(color=WHITE):
+            head = Circle(radius=0.2, color=color)
+            body = Line(head.get_bottom(), head.get_bottom() + DOWN * 0.5, color=color)
+            left_leg = Line(body.get_end(), body.get_end() + DOWN * 0.4 + LEFT * 0.2, color=color)
+            right_leg = Line(body.get_end(), body.get_end() + DOWN * 0.4 + RIGHT * 0.2, color=color)
+            left_arm = Line(body.get_center(), body.get_center() + UP * 0.1 + LEFT * 0.3, color=color)
+            right_arm = Line(body.get_center(), body.get_center() + UP * 0.1 + RIGHT * 0.3, color=color)
+            return VGroup(head, body, left_leg, right_leg, left_arm, right_arm)
+
+        tell = make_stickman(color=GREEN_C)
+        tell.scale(0.7).move_to(axes.c2p(-1.5, -0.6))
+        label_armbrust = Text("Armbrust", font_size=18, color=GREEN_C).next_to(tell, DOWN + LEFT, buff=0.1)
+
+        target_point = axes.c2p(x_target_val, y_target_val)
+        target_person = make_stickman(color=RED_C)
+        target_person.scale(0.7)
+        target_person.move_to(target_point + DOWN * target_person.height / 2)
+
+        head_center_target = target_point + DOWN * 0.14
+        dot_target = Dot(head_center_target, radius=0.08, color=RED_C)
+        label_target = MathTex(r"A = (25\text{m}; -1\text{m})", font_size=24, color=RED_C).next_to(
+            head_center_target, UP + RIGHT, buff=0.15
+        )
+
+        dist_arrow = DoubleArrow(
+            start=axes.c2p(0, -2.2),
+            end=axes.c2p(x_target_val, -2.2),
+            buff=0,
+            color=YELLOW_C,
+            stroke_width=3,
+            max_tip_length_to_length_ratio=0.08
+        )
+        label_dist = MathTex(r"25\text{ m}", color=YELLOW_C).next_to(dist_arrow.get_center(), UP, buff=0.1)
+
+        dashed_x_proj = DashedLine(start=target_point, end=axes.c2p(x_target_val, -2.2), color=GRAY_B, stroke_width=2)
+        dashed_origin_proj = DashedLine(start=origin, end=axes.c2p(0, -2.2), color=GRAY_B, stroke_width=2)
+
+        self.add(
+            axes, labels,
+            parabola,
+            arrow_v0, label_v0,
+            arc_alpha, label_alpha,
+            tell, label_armbrust,
+            target_person, dot_target, label_target,
+            dist_arrow, label_dist,
+            dashed_x_proj, dashed_origin_proj
+        )

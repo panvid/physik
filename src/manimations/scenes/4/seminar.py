@@ -178,3 +178,51 @@ class KraeftedreieckLaterneKorrektWinkel(Scene):
             arc_alpha_forces, label_alpha_forces,
             dot_p, label_p
         )
+
+class KraeftedreieckMinimal(Scene):
+    def construct(self):
+        s1_val = 1.0
+        s2_val = 1.2
+        cos_alpha = s1_val / s2_val
+        alpha_rad = math.acos(cos_alpha)
+
+        origin = LEFT * 1.0 + DOWN * 1.5
+        f_len = 3.0
+
+        f1_len = f_len / math.tan(alpha_rad)
+
+        pt_top_f = origin + UP * f_len
+        pt_f1_end = pt_top_f + RIGHT * f1_len
+
+        arrow_f = Arrow(origin, pt_top_f, buff=0, color=YELLOW_C, stroke_width=6)
+        label_f = MathTex(r"\vec{F}", color=YELLOW_C, font_size=40).next_to(arrow_f.get_center(), LEFT, buff=0.15)
+
+        arrow_f1 = Arrow(pt_top_f, pt_f1_end, buff=0, color=BLUE_C, stroke_width=6)
+        label_f1 = MathTex(r"\vec{F}_1", color=BLUE_C, font_size=40).next_to(arrow_f1.get_center(), UP, buff=0.15)
+
+        arrow_f2 = Arrow(pt_f1_end, origin, buff=0, color=GREEN_C, stroke_width=6)
+        label_f2 = MathTex(r"\vec{F}_2", color=GREEN_C, font_size=40).next_to(arrow_f2.get_center(), DOWN + RIGHT, buff=0.15)
+
+        arc_alpha = Arc(
+            radius=1.0,
+            start_angle=math.pi,
+            angle=alpha_rad,
+            arc_center=pt_f1_end,
+            color=YELLOW_C,
+            stroke_width=3
+        )
+        label_alpha = MathTex(r"\alpha", color=YELLOW_C, font_size=34).move_to(
+            pt_f1_end + LEFT * 0.65 + DOWN * 0.25
+        )
+
+        dot_origin = Dot(origin, radius=0.08, color=WHITE)
+        dot_top = Dot(pt_top_f, radius=0.08, color=WHITE)
+        dot_right = Dot(pt_f1_end, radius=0.08, color=WHITE)
+
+        self.add(
+            arrow_f, label_f,
+            arrow_f1, label_f1,
+            arrow_f2, label_f2,
+            arc_alpha, label_alpha,
+            dot_origin, dot_top, dot_right
+        )

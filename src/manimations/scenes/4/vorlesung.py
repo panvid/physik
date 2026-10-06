@@ -695,3 +695,42 @@ class AffenschussSuperposition(Scene):
             label_parabola,
             label_monkey
         )
+
+class KraftpfeilDynamikExaktParallel(Scene):
+    def construct(self):
+        start_pt = LEFT * 2.5 + UP * 1.5
+        length_val = 5.0
+        angle_rad = math.radians(-35)
+
+        end_pt = start_pt + RIGHT * (length_val * math.cos(angle_rad)) + UP * (length_val * math.sin(angle_rad))
+
+        arrow_f = Arrow(
+            start=start_pt,
+            end=end_pt,
+            buff=0,
+            color=RED_C,
+            stroke_width=6,
+            max_tip_length_to_length_ratio=0.15
+        )
+        label_f = MathTex(r"\vec{F}", color=RED_C, font_size=42).next_to(arrow_f.get_start(), UP + LEFT, buff=0.15)
+
+        label_direction = Text("Richtung", font_size=24, color=WHITE).next_to(arrow_f.get_end(), DOWN + RIGHT, buff=0.15)
+
+        ref_line = Line(start_pt, end_pt)
+        brace_f = Brace(ref_line, direction=DOWN, buff=0.25, color=YELLOW_C)
+        brace_f.rotate(angle_rad, about_point=ref_line.get_center())
+
+        label_magnitude = Text("Betrag", font_size=24, color=YELLOW_C)
+        label_magnitude.next_to(brace_f, DOWN, buff=0.15)
+        label_magnitude.rotate(angle_rad, about_point=label_magnitude.get_center())
+
+        dot_start = Dot(start_pt, radius=0.09, color=WHITE)
+
+        self.add(
+            arrow_f,
+            label_f,
+            label_direction,
+            brace_f,
+            label_magnitude,
+            dot_start
+        )

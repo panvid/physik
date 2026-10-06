@@ -1,4 +1,5 @@
 from manim import *
+import numpy as np
 
 class FallgesetzExperimentSkizze(Scene):
     def construct(self):
@@ -1098,4 +1099,113 @@ class WurfzeitVergleichOhneKS(Scene):
             *elements,
             label_fall,
             label_throw
+        )
+
+class AufprallgeschwindigkeitAnpassung(Scene):
+    def construct(self):
+        impact_point = LEFT * 0.5 + UP * 0.5
+        ground_left = LEFT * 5.5 + UP * 0.5
+        ground_right = RIGHT * 5.5 + UP * 0.5
+
+        ground = Line(start=ground_left, end=ground_right, color=GRAY_A, stroke_width=4)
+        ground_hatch = DashedLine(
+            start=ground_left + DOWN * 0.1,
+            end=ground_right + DOWN * 0.1,
+            color=GRAY_C,
+            stroke_width=2
+        )
+
+        curve_start = LEFT * 4.5 + UP * 3.2
+        parabola_points = [
+            curve_start + RIGHT * (4.0 * t) + DOWN * (2.7 * (t ** 2))
+            for t in np.linspace(0, 1, 80)
+        ]
+        parabola_smooth = VMobject(color=WHITE, stroke_width=3)
+        parabola_smooth.set_points_smoothly(parabola_points)
+        parabola = DashedVMobject(parabola_smooth, dashed_ratio=0.5)
+
+        impact_dot = Dot(impact_point, radius=0.09, color=RED_C)
+
+        vx_len = 3.2
+        vy_len = 2.6
+
+        vector_vx = Arrow(
+            start=impact_point,
+            end=impact_point + RIGHT * vx_len,
+            buff=0,
+            color=BLUE_C,
+            stroke_width=5,
+            max_tip_length_to_length_ratio=0.15
+        )
+        label_vx = MathTex(r"v_x", color=BLUE_C).next_to(vector_vx.get_center(), UP, buff=0.15)
+
+        vector_vy = Arrow(
+            start=impact_point,
+            end=impact_point + DOWN * vy_len,
+            buff=0,
+            color=GREEN_C,
+            stroke_width=5,
+            max_tip_length_to_length_ratio=0.15
+        )
+        label_vy = MathTex(r"v_y", color=GREEN_C).next_to(vector_vy.get_center(), LEFT, buff=0.15)
+
+        vector_vy_parallel = DashedLine(
+            start=impact_point + RIGHT * vx_len,
+            end=impact_point + RIGHT * vx_len + DOWN * vy_len,
+            color=GREEN_C,
+            stroke_width=2
+        )
+        vector_vx_parallel = DashedLine(
+            start=impact_point + DOWN * vy_len,
+            end=impact_point + RIGHT * vx_len + DOWN * vy_len,
+            color=BLUE_C,
+            stroke_width=2
+        )
+
+        vector_v = Arrow(
+            start=impact_point,
+            end=impact_point + RIGHT * vx_len + DOWN * vy_len,
+            buff=0,
+            color=RED_C,
+            stroke_width=6,
+            max_tip_length_to_length_ratio=0.12
+        )
+        label_v = MathTex(r"v", color=RED_C).next_to(vector_v.get_center(), DOWN + LEFT, buff=0.15)
+
+        theta_val = np.arctan2(vy_len, vx_len)
+
+        angle_1 = Arc(
+            radius=1.1,
+            start_angle=0,
+            angle=-theta_val,
+            arc_center=impact_point,
+            color=YELLOW_C,
+            stroke_width=3
+        )
+        label_theta_1 = MathTex(r"\theta", color=YELLOW_C).move_to(
+            impact_point + RIGHT * 1.5 + DOWN * 0.35
+        )
+
+        angle_2 = Arc(
+            radius=0.9,
+            start_angle=-np.pi,
+            angle=-theta_val,
+            arc_center=impact_point,
+            color=YELLOW_C,
+            stroke_width=3
+        )
+        label_theta_2 = MathTex(r"\theta", color=YELLOW_C).move_to(
+            impact_point + LEFT * 1.3 + DOWN * 0.35
+        )
+
+        self.add(
+            ground, ground_hatch,
+            parabola,
+            impact_dot,
+            vector_vx, label_vx,
+            vector_vy, label_vy,
+            vector_vy_parallel, vector_vx_parallel,
+            vector_v, label_v,
+            angle_1, label_theta_1,
+            angle_2, label_theta_2
         )

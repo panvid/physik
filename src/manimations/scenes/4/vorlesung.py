@@ -975,3 +975,129 @@ class KraefteParallelogramm(Scene):
             arc_alpha, label_alpha,
             dot_origin
         )
+
+class KraefteParallelogrammHorizontalPraszise(Scene):
+    def construct(self):
+        origin = LEFT * 3.0 + DOWN * 0.2
+
+        length_f = 6.0
+        beta_deg = 35
+        beta_rad = math.radians(beta_deg)
+
+        length_f1 = (length_f / 2) / math.cos(beta_rad)
+        length_f2 = length_f1
+
+        end_f1 = origin + RIGHT * (length_f1 * math.cos(beta_rad)) + UP * (length_f1 * math.sin(beta_rad))
+        end_f2 = origin + RIGHT * (length_f2 * math.cos(beta_rad)) + DOWN * (length_f2 * math.sin(beta_rad))
+        end_f = origin + RIGHT * length_f
+
+        arrow_f1 = Arrow(
+            start=origin,
+            end=end_f1,
+            buff=0,
+            color=BLUE_C,
+            stroke_width=6,
+            max_tip_length_to_length_ratio=0.18
+        )
+        label_f1 = MathTex(r"\vec{F}_1", color=BLUE_C, font_size=38).next_to(arrow_f1.get_center(), UP + LEFT, buff=0.1)
+
+        arrow_f2 = Arrow(
+            start=origin,
+            end=end_f2,
+            buff=0,
+            color=GREEN_C,
+            stroke_width=6,
+            max_tip_length_to_length_ratio=0.18
+        )
+        label_f2 = MathTex(r"\vec{F}_2", color=GREEN_C, font_size=38).next_to(arrow_f2.get_center(), DOWN + LEFT, buff=0.1)
+
+        arrow_f = Arrow(
+            start=origin,
+            end=end_f,
+            buff=0,
+            color=RED_C,
+            stroke_width=6,
+            max_tip_length_to_length_ratio=0.12
+        )
+        label_f = MathTex(r"\vec{F}", color=RED_C, font_size=40).next_to(arrow_f.get_end(), RIGHT, buff=0.15)
+
+        dashed_f1_bottom = DashedLine(start=end_f2, end=end_f, color=BLUE_C, stroke_width=3)
+        dashed_f2_top = DashedLine(start=end_f1, end=end_f, color=GREEN_C, stroke_width=3)
+
+        dashed_vertical_connect = DashedLine(start=end_f1, end=end_f2, color=GRAY_B, stroke_width=2.5)
+
+        arc_alpha = Arc(
+            radius=1.2,
+            start_angle=-beta_rad,
+            angle=2 * beta_rad,
+            arc_center=origin,
+            color=YELLOW_C,
+            stroke_width=3
+        )
+        label_alpha = MathTex(r"\alpha", color=YELLOW_C, font_size=34).next_to(arc_alpha, LEFT, buff=0.1)
+
+        arc_gamma_top = Arc(
+            radius=0.7,
+            start_angle=math.pi + beta_rad,
+            angle=math.pi / 2 - beta_rad,
+            arc_center=end_f1,
+            color=PURPLE_B,
+            stroke_width=2.5
+        )
+        label_gamma_top = MathTex(r"\gamma", color=PURPLE_B, font_size=28).move_to(
+            end_f1 + LEFT * 0.45 + DOWN * 0.35
+        )
+
+        arc_beta_top = Arc(
+            radius=0.7,
+            start_angle=-math.pi / 2,
+            angle=beta_rad,
+            arc_center=end_f1,
+            color=TEAL_C,
+            stroke_width=2.5
+        )
+        label_beta_top = MathTex(r"\beta", color=TEAL_C, font_size=28).move_to(
+            end_f1 + RIGHT * 0.25 + DOWN * 0.45
+        )
+
+        arc_gamma_bottom = Arc(
+            radius=0.7,
+            start_angle=math.pi / 2,
+            angle=math.pi / 2 - beta_rad,
+            arc_center=end_f2,
+            color=PURPLE_B,
+            stroke_width=2.5
+        )
+        label_gamma_bottom = MathTex(r"\gamma'", color=PURPLE_B, font_size=28).move_to(
+            end_f2 + LEFT * 0.25 + UP * 0.45
+        )
+
+        arc_beta_bottom = Arc(
+            radius=0.7,
+            start_angle=beta_rad,
+            angle=beta_rad,
+            arc_center=end_f2,
+            color=TEAL_C,
+            stroke_width=2.5
+        )
+        label_beta_bottom = MathTex(r"\beta'", color=TEAL_C, font_size=28).move_to(
+            end_f2 + RIGHT * 0.45 + UP * 0.35
+        )
+
+        dot_origin = Dot(origin, radius=0.08, color=WHITE)
+        dot_f1 = Dot(end_f1, radius=0.08, color=BLUE_C)
+        dot_f2 = Dot(end_f2, radius=0.08, color=GREEN_C)
+
+        self.add(
+            arrow_f1, label_f1,
+            arrow_f2, label_f2,
+            arrow_f, label_f,
+            dashed_f1_bottom, dashed_f2_top,
+            dashed_vertical_connect,
+            arc_alpha, label_alpha,
+            arc_gamma_top, label_gamma_top,
+            arc_beta_top, label_beta_top,
+            arc_gamma_bottom, label_gamma_bottom,
+            arc_beta_bottom, label_beta_bottom,
+            dot_origin, dot_f1, dot_f2
+        )

@@ -1,4 +1,5 @@
 from manim import *
+import math
 
 class WurfOrtsGeschwindigkeitBeschleunigung(Scene):
     def construct(self):
@@ -61,4 +62,82 @@ class WurfOrtsGeschwindigkeitBeschleunigung(Scene):
             arrow_v0, label_v0,
             arrow_h, label_h,
             dashed_h_top, dashed_h_bottom
+        )
+
+class SchraegerWurfDiagramm(Scene):
+    def construct(self):
+        axes = Axes(
+            x_range=[-0.5, 7.5, 1],
+            y_range=[-0.5, 4.5, 1],
+            x_length=9.0,
+            y_length=5.5,
+            axis_config={"include_numbers": False, "color": GRAY_C},
+            tips=True
+        )
+
+        labels = axes.get_axis_labels(x_label="x", y_label="y")
+
+        origin = axes.c2p(0, 0)
+        xw_val = 6.0
+        ymax_val = 3.2
+
+        parabola_smooth = axes.plot(
+            lambda x: 4 * ymax_val * (x / xw_val) * (1 - x / xw_val),
+            x_range=[0, xw_val],
+            color=WHITE
+        )
+        parabola = DashedVMobject(parabola_smooth, dashed_ratio=0.5)
+
+        v0_len = 2.4
+        alpha_rad = math.atan(4 * ymax_val / xw_val)
+        v0_end = axes.c2p(v0_len * math.cos(alpha_rad), v0_len * math.sin(alpha_rad))
+
+        arrow_v0 = Arrow(
+            start=origin,
+            end=v0_end,
+            buff=0,
+            color=BLUE_C,
+            stroke_width=5,
+            max_tip_length_to_length_ratio=0.18
+        )
+        label_v0 = MathTex(r"\vec{v}_0", color=BLUE_C).next_to(arrow_v0.get_end(), UP + RIGHT, buff=0.1)
+
+        arc_alpha = Arc(
+            radius=1.0,
+            start_angle=0,
+            angle=alpha_rad,
+            arc_center=origin,
+            color=YELLOW_C,
+            stroke_width=3
+        )
+        label_alpha = MathTex(r"\alpha", color=YELLOW_C).move_to(
+            axes.c2p(1.3 * math.cos(alpha_rad / 2), 1.3 * math.sin(alpha_rad / 2))
+        )
+
+        apex_point = axes.c2p(xw_val / 2, ymax_val)
+        dot_apex = Dot(apex_point, radius=0.08, color=RED_C)
+
+        arrow_ymax = DoubleArrow(
+            start=axes.c2p(xw_val / 2, 0),
+            end=apex_point,
+            buff=0,
+            color=YELLOW_C,
+            stroke_width=3,
+            max_tip_length_to_length_ratio=0.1
+        )
+        label_ymax = MathTex(r"y_{\text{max}}", color=YELLOW_C).next_to(arrow_ymax.get_center(), RIGHT, buff=0.15)
+
+        dashed_apex_x = DashedLine(start=apex_point, end=axes.c2p(xw_val / 2, 0), color=GRAY_B, stroke_width=2)
+
+        impact_point = axes.c2p(xw_val, 0)
+        dot_impact = Dot(impact_point, radius=0.08, color=RED_C)
+        label_xw = MathTex(r"x_w", color=WHITE).next_to(impact_point, DOWN, buff=0.2)
+
+        self.add(
+            axes, labels,
+            parabola,
+            arrow_v0, label_v0,
+            arc_alpha, label_alpha,
+            dashed_apex_x, dot_apex, arrow_ymax, label_ymax,
+            dot_impact, label_xw
         )

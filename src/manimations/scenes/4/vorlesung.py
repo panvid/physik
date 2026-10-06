@@ -830,3 +830,79 @@ class KraefteAdditionParallel(Scene):
             arrow_f, label_f, dot_f,
             dashed_start, dashed_end
         )
+
+class KraefteSubtraktionUntereinander(Scene):
+    def construct(self):
+        start_x = -3.0
+
+        start_f1 = RIGHT * start_x + UP * 1.5
+        length_f1 = 5.0
+        end_f1 = start_f1 + RIGHT * length_f1
+
+        arrow_f1 = Arrow(
+            start=start_f1,
+            end=end_f1,
+            buff=0,
+            color=BLUE_C,
+            stroke_width=6,
+            max_tip_length_to_length_ratio=0.15
+        )
+        label_f1 = MathTex(r"\vec{F}_1", color=BLUE_C, font_size=42).next_to(arrow_f1.get_center(), UP, buff=0.15)
+        dot_f1 = Dot(start_f1, radius=0.09, color=WHITE)
+
+        start_f2 = RIGHT * start_x + UP * 0.0
+        length_f2 = 2.0
+        end_f2 = start_f2 + RIGHT * length_f2
+
+        arrow_f2 = Arrow(
+            start=end_f2,
+            end=start_f2,
+            buff=0,
+            color=GREEN_C,
+            stroke_width=6,
+            max_tip_length_to_length_ratio=0.25
+        )
+        label_f2 = MathTex(r"\vec{F}_2", color=GREEN_C, font_size=42).next_to(arrow_f2.get_center(), UP, buff=0.15)
+        dot_f2 = Dot(start_f2, radius=0.09, color=WHITE)
+
+        start_f = RIGHT * start_x + DOWN * 1.5
+        length_f_res = length_f1 - length_f2
+        end_f_res = start_f + RIGHT * length_f_res
+        end_f_full = start_f + RIGHT * length_f1
+
+        arrow_f = Arrow(
+            start=start_f,
+            end=end_f_res,
+            buff=0,
+            color=RED_C,
+            stroke_width=6,
+            max_tip_length_to_length_ratio=0.2
+        )
+        label_f = MathTex(r"\vec{F}", color=RED_C, font_size=42).next_to(arrow_f.get_center(), DOWN, buff=0.15)
+        dot_f = Dot(start_f, radius=0.09, color=WHITE)
+
+        dashed_subtraction = DashedLine(
+            start=end_f_res,
+            end=end_f_full,
+            color=GREEN_C,
+            stroke_width=3
+        )
+        arrow_f2_sub = Arrow(
+            start=end_f_full,
+            end=end_f_res,
+            buff=0,
+            color=GREEN_C,
+            stroke_width=3,
+            max_tip_length_to_length_ratio=0.25
+        )
+
+        dashed_guide_left = DashedLine(start=start_f1, end=start_f, color=GRAY_B, stroke_width=2)
+        dashed_guide_right = DashedLine(start=end_f1, end=end_f_full, color=GRAY_B, stroke_width=2)
+
+        self.add(
+            arrow_f1, label_f1, dot_f1,
+            arrow_f2, label_f2, dot_f2,
+            arrow_f, label_f, dot_f,
+            dashed_subtraction, arrow_f2_sub,
+            dashed_guide_left, dashed_guide_right
+        )

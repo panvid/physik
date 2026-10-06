@@ -906,3 +906,72 @@ class KraefteSubtraktionUntereinander(Scene):
             dashed_subtraction, arrow_f2_sub,
             dashed_guide_left, dashed_guide_right
         )
+
+class KraefteParallelogramm(Scene):
+    def construct(self):
+        origin = LEFT * 2.5 + DOWN * 1.0
+
+        length_f1 = 4.5
+        length_f2 = 3.0
+        alpha_deg = 50
+        alpha_rad = math.radians(alpha_deg)
+
+        end_f1 = origin + RIGHT * length_f1
+        end_f2 = origin + RIGHT * (length_f2 * math.cos(alpha_rad)) + UP * (length_f2 * math.sin(alpha_rad))
+        end_f_res = end_f1 + (end_f2 - origin)
+
+        arrow_f1 = Arrow(
+            start=origin,
+            end=end_f1,
+            buff=0,
+            color=BLUE_C,
+            stroke_width=6,
+            max_tip_length_to_length_ratio=0.15
+        )
+        label_f1 = MathTex(r"\vec{F}_1", color=BLUE_C, font_size=40).next_to(arrow_f1.get_center(), DOWN, buff=0.15)
+
+        arrow_f2 = Arrow(
+            start=origin,
+            end=end_f2,
+            buff=0,
+            color=GREEN_C,
+            stroke_width=6,
+            max_tip_length_to_length_ratio=0.18
+        )
+        label_f2 = MathTex(r"\vec{F}_2", color=GREEN_C, font_size=40).next_to(arrow_f2.get_center(), UP + LEFT, buff=0.15)
+
+        dashed_f1_top = DashedLine(start=end_f2, end=end_f_res, color=BLUE_C, stroke_width=3)
+        dashed_f2_right = DashedLine(start=end_f1, end=end_f_res, color=GREEN_C, stroke_width=3)
+
+        arrow_f = Arrow(
+            start=origin,
+            end=end_f_res,
+            buff=0,
+            color=RED_C,
+            stroke_width=6,
+            max_tip_length_to_length_ratio=0.12
+        )
+        label_f = MathTex(r"\vec{F}", color=RED_C, font_size=40).next_to(arrow_f.get_end(), UP + RIGHT, buff=0.1)
+
+        arc_alpha = Arc(
+            radius=1.0,
+            start_angle=0,
+            angle=alpha_rad,
+            arc_center=origin,
+            color=YELLOW_C,
+            stroke_width=3
+        )
+        label_alpha = MathTex(r"\alpha", color=YELLOW_C, font_size=36).move_to(
+            origin + RIGHT * (1.4 * math.cos(alpha_rad / 2)) + UP * (1.4 * math.sin(alpha_rad / 2))
+        )
+
+        dot_origin = Dot(origin, radius=0.09, color=WHITE)
+
+        self.add(
+            arrow_f1, label_f1,
+            arrow_f2, label_f2,
+            dashed_f1_top, dashed_f2_right,
+            arrow_f, label_f,
+            arc_alpha, label_alpha,
+            dot_origin
+        )

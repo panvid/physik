@@ -734,3 +734,41 @@ class KraftpfeilDynamikExaktParallel(Scene):
             label_magnitude,
             dot_start
         )
+
+class ParalleleKraefte(Scene):
+    def construct(self):
+        start_f1 = LEFT * 3.0 + UP * 1.0
+        length_f1 = 5.0
+        end_f1 = start_f1 + RIGHT * length_f1
+
+        start_f2 = LEFT * 3.0 + DOWN * 1.0
+        length_f2 = 3.0
+        end_f2 = start_f2 + RIGHT * length_f2
+
+        arrow_f1 = Arrow(
+            start=start_f1,
+            end=end_f1,
+            buff=0,
+            color=BLUE_C,
+            stroke_width=6,
+            max_tip_length_to_length_ratio=0.15
+        )
+        label_f1 = MathTex(r"\vec{F}_1", color=BLUE_C, font_size=42).next_to(arrow_f1.get_start(), LEFT, buff=0.2)
+
+        arrow_f2 = Arrow(
+            start=start_start_f2 if "start_start_f2" in locals() else start_f2,
+            end=end_f2,
+            buff=0,
+            color=RED_C,
+            stroke_width=6,
+            max_tip_length_to_length_ratio=0.2
+        )
+        label_f2 = MathTex(r"\vec{F}_2", color=RED_C, font_size=42).next_to(arrow_f2.get_start(), LEFT, buff=0.2)
+
+        dot_f1 = Dot(start_f1, radius=0.09, color=WHITE)
+        dot_f2 = Dot(start_f2, radius=0.09, color=WHITE)
+
+        self.add(
+            arrow_f1, label_f1, dot_f1,
+            arrow_f2, label_f2, dot_f2
+        )

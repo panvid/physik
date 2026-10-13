@@ -68,3 +68,45 @@ class LampenStatikSkizze(Scene):
             vec_f2, label_f2,
             vec_fg, label_fg
         )
+
+class KraefteDreieckSkizze(Scene):
+    def construct(self):
+        p_start = LEFT * 1.5 + DOWN * 1.5
+
+        vec_fg_end = p_start + UP * 3.0
+        vec_fg = Arrow(start=p_start, end=vec_fg_end, buff=0, color=BLUE, max_tip_length_to_length_ratio=0.15)
+        label_fg = MathTex(r"\vec{F}_G", color=BLUE, font_size=32).next_to(vec_fg, LEFT, buff=0.15)
+
+        vec_f1_end = vec_fg_end + RIGHT * 4.0
+        vec_f1 = Arrow(start=vec_fg_end, end=vec_f1_end, buff=0, color=RED, max_tip_length_to_length_ratio=0.15)
+        label_f1 = MathTex(r"\vec{F}_1", color=RED, font_size=32).next_to(vec_f1, UP, buff=0.15)
+
+        vec_f2 = Arrow(start=p_start, end=vec_f1_end, buff=0, color=GREEN, max_tip_length_to_length_ratio=0.15)
+        label_f2 = MathTex(r"\vec{F}_2", color=GREEN, font_size=32).next_to(vec_f2, DOWN + RIGHT, buff=0.15)
+
+        right_angle = RightAngle(
+            Line(vec_fg_end, p_start),
+            Line(vec_fg_end, vec_f1_end),
+            length=0.35,
+            color=WHITE
+        )
+
+        f2_dir = p_start - vec_f1_end
+        f2_angle = np.arctan2(f2_dir[1], f2_dir[0])
+
+        alpha_arc = Arc(
+            radius=0.8,
+            start_angle=PI,
+            angle=f2_angle - (-PI),
+            arc_center=vec_f1_end,
+            color=WHITE
+        )
+        label_alpha = MathTex(r"\alpha", font_size=32).move_to(vec_f1_end + LEFT * 1.2 + DOWN * 0.3)
+
+        self.add(
+            vec_fg, label_fg,
+            vec_f1, label_f1,
+            vec_f2, label_f2,
+            right_angle,
+            alpha_arc, label_alpha
+        )

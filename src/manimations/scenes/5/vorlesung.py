@@ -91,3 +91,69 @@ class ErdeEllipsenSkizze(Scene):
             point_np, label_np,
             point_sp, label_sp
         )
+
+class KraefteParallelogrammRechteckSkizze(Scene):
+    def construct(self):
+        mass_pos = DOWN * 2.0
+
+        side_length = 2.0
+
+        p_f1 = mass_pos + LEFT * side_length + UP * side_length
+        p_f2 = mass_pos + RIGHT * side_length + UP * side_length
+        p_f = mass_pos + UP * (2 * side_length)
+
+        vec_f1 = Arrow(start=mass_pos, end=p_f1, buff=0, color=RED, max_tip_length_to_length_ratio=0.15)
+        label_f1 = MathTex(r"\vec{F}_1", color=RED, font_size=32).next_to(vec_f1, UP + LEFT, buff=0.1)
+
+        vec_f2 = Arrow(start=mass_pos, end=p_f2, buff=0, color=GREEN, max_tip_length_to_length_ratio=0.15)
+        label_f2 = MathTex(r"\vec{F}_2", color=GREEN, font_size=32).next_to(vec_f2, UP + RIGHT, buff=0.1)
+
+        vec_f = Arrow(start=mass_pos, end=p_f, buff=0, color=TEAL, max_tip_length_to_length_ratio=0.12)
+        label_f = MathTex(r"\vec{F}", color=TEAL, font_size=32).next_to(vec_f, RIGHT, buff=0.15)
+
+        vec_fg = Arrow(start=mass_pos, end=mass_pos + DOWN * (2 * side_length), buff=0, color=BLUE, max_tip_length_to_length_ratio=0.12)
+        label_fg = MathTex(r"\vec{F}_G", color=BLUE, font_size=32).next_to(vec_fg, RIGHT, buff=0.15)
+
+        dashed_left = DashedLine(start=p_f1, end=p_f, stroke_width=1.5, color=GRAY)
+        dashed_right = DashedLine(start=p_f2, end=p_f, stroke_width=1.5, color=GRAY)
+
+        ra_bottom = RightAngle(
+            Line(mass_pos, p_f1),
+            Line(mass_pos, p_f2),
+            length=0.35,
+            color=WHITE
+        )
+
+        ra_top = RightAngle(
+            Line(p_f, p_f1),
+            Line(p_f, p_f2),
+            length=0.35,
+            color=WHITE
+        )
+
+        ra_left = RightAngle(
+            Line(p_f1, p_f),
+            Line(p_f1, mass_pos),
+            length=0.35,
+            color=WHITE
+        )
+
+        ra_right = RightAngle(
+            Line(p_f2, mass_pos),
+            Line(p_f2, p_f),
+            length=0.35,
+            color=WHITE
+        )
+
+        mass_box = Square(side_length=0.6, fill_color=GRAY_D, fill_opacity=0.9, stroke_color=WHITE, stroke_width=2).move_to(mass_pos)
+        label_m = MathTex("m", font_size=28, color=WHITE).move_to(mass_pos)
+
+        self.add(
+            dashed_left, dashed_right,
+            vec_f1, label_f1,
+            vec_f2, label_f2,
+            vec_f, label_f,
+            vec_fg, label_fg,
+            ra_bottom, ra_top, ra_left, ra_right,
+            mass_box, label_m
+        )

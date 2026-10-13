@@ -110,3 +110,35 @@ class KraefteDreieckSkizze(Scene):
             right_angle,
             alpha_arc, label_alpha
         )
+
+class KraefteParallelogrammSkizze(Scene):
+    def construct(self):
+        p_point = ORIGIN
+
+        vec_f1 = Arrow(start=p_point, end=p_point + LEFT * 3.0, buff=0, color=RED, max_tip_length_to_length_ratio=0.15)
+        label_f1 = MathTex(r"\vec{F}_1", color=RED, font_size=32).next_to(vec_f1, DOWN, buff=0.15)
+
+        vec_fg_prime = Arrow(start=p_point, end=p_point + UP * 2.0, buff=0, color=TEAL, max_tip_length_to_length_ratio=0.15)
+        label_fg_prime = MathTex(r"\vec{F}_G'", color=TEAL, font_size=32).next_to(vec_fg_prime, LEFT, buff=0.15)
+
+        vec_fg = Arrow(start=p_point, end=p_point + DOWN * 2.0, buff=0, color=BLUE, max_tip_length_to_length_ratio=0.15)
+        label_fg = MathTex(r"\vec{F}_G", color=BLUE, font_size=32).next_to(vec_fg, LEFT, buff=0.15)
+
+        vec_f2 = Arrow(start=p_point, end=p_point + RIGHT * 3.0 + UP * 2.0, buff=0, color=GREEN, max_tip_length_to_length_ratio=0.15)
+        label_f2 = MathTex(r"\vec{F}_2", color=GREEN, font_size=32).next_to(vec_f2, UP + RIGHT, buff=0.15)
+
+        dashed_diag = DashedLine(start=p_point + LEFT * 3.0, end=p_point + UP * 2.0, stroke_width=1.5, color=GRAY)
+        dashed_top = DashedLine(start=p_point + UP * 2.0, end=p_point + RIGHT * 3.0 + UP * 2.0, stroke_width=1.5, color=GRAY)
+        dashed_horiz = DashedLine(start=p_point, end=p_point + RIGHT * 3.5, stroke_width=1.5, color=GRAY)
+
+        point_p = Dot(p_point, radius=0.08, color=WHITE)
+        label_p = MathTex("P", font_size=32).next_to(point_p, DOWN + RIGHT, buff=0.1)
+
+        self.add(
+            dashed_diag, dashed_top, dashed_horiz,
+            vec_f1, label_f1,
+            vec_fg_prime, label_fg_prime,
+            vec_fg, label_fg,
+            vec_f2, label_f2,
+            point_p, label_p
+        )

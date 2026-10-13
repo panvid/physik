@@ -157,3 +157,84 @@ class KraefteParallelogrammRechteckSkizze(Scene):
             ra_bottom, ra_top, ra_left, ra_right,
             mass_box, label_m
         )
+
+class HookeschesGesetzSkizze(Scene):
+    def construct(self):
+        # Fester Rahmen, der den gesamten sichtbaren Bereich (14x8) abdeckt
+        # Verhindert das automatische Zentrieren der Bounding-Box durch Manim
+        frame_bounds = Square(side_length=8, stroke_opacity=0).scale(1.777)
+
+        ceiling_y = 3.2
+        ceiling = Line(start=LEFT * 6, end=RIGHT * 6, stroke_width=4, color=WHITE)
+        ceiling.move_to(np.array([0, ceiling_y, 0]))
+
+        hatch_lines = VGroup()
+        for x in np.arange(-6, 6, 0.4):
+            hatch_lines.add(Line(start=[x, ceiling_y, 0], end=[x + 0.2, ceiling_y + 0.3, 0], stroke_width=1.5, color=GRAY))
+
+        x_left = -2.0
+        x_right = 2.0
+
+        y_left_end = ceiling_y - 2.2
+        y_right_end = ceiling_y - 4.8
+
+        def create_spring(start_pt, length, num_coils=8, radius=0.25):
+            pts = [start_pt]
+            step = length / num_coils
+            for i in range(num_coils):
+                y_center = start_pt[1] - (i + 0.5) * step
+                side = 1 if i % 2 == 0 else -1
+                pts.append(np.array([start_pt[0] + side * radius, y_center, 0]))
+            pts.append(np.array([start_pt[0], start_pt[1] - length, 0]))
+            return VMobject(stroke_width=2, color=LIGHT_GRAY).set_points_as_corners(pts)
+
+        spring_left = create_spring(np.array([x_left, ceiling_y, 0]), 2.2)
+        spring_right = create_spring(np.array([x_right, ceiling_y, 0]), 4.8)
+
+        p_left_end = np.array([x_left, y_left_end, 0])
+        p_right_end = np.array([x_right, y_right_end, 0])
+
+        dot_left = Dot(p_left_end, radius=0.06, color=WHITE)
+        dot_right = Dot(p_right_end, radius=0.06, color=WHITE)
+
+        dashed_top_ref = DashedLine(
+            start=p_left_end,
+            end=np.array([x_right, y_left_end, 0]),
+            stroke_width=1.5,
+            color=GRAY
+        )
+
+        dashed_bottom_ref = DashedLine(
+            start=p_right_end,
+            end=np.array([x_left, y_right_end, 0]),
+            stroke_width=1.5,
+            color=GRAY
+        )
+
+        x_arrow = 0.0
+        arrow_delta_l = DoubleArrow(
+            start=np.array([x_arrow, y_left_end, 0]),
+            end=np.array([x_arrow, y_right_end, 0]),
+            buff=0,
+            stroke_width=2,
+            color=WHITE,
+            max_tip_length_to_length_ratio=0.12
+        )
+        label_delta_l = MathTex(r"\Delta l", font_size=32).next_to(arrow_delta_l, LEFT, buff=0.15)
+
+        vec_f_feder = Arrow(start=p_right_end, end=p_right_end + UP * 1.4, buff=0, color=GREEN, max_tip_length_to_length_ratio=0.15)
+        label_f_feder = MathTex(r"\vec{F}_{\text{Feder}}", color=GREEN, font_size=32).next_to(vec_f_feder, RIGHT, buff=0.15)
+
+        vec_f = Arrow(start=p_right_end, end=p_right_end + DOWN * 1.4, buff=0, color=RED, max_tip_length_to_length_ratio=0.15)
+        label_f = MathTex(r"\vec{F}", color=RED, font_size=32).next_to(vec_f, RIGHT, buff=0.15)
+
+        self.add(
+            frame_bounds,
+            ceiling, hatch_lines,
+            spring_left, spring_right,
+            dot_left, dot_right,
+            dashed_top_ref, dashed_bottom_ref,
+            arrow_delta_l, label_delta_l,
+            vec_f_feder, label_f_feder,
+            vec_f, label_f
+        )

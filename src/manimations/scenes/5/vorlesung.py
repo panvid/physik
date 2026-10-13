@@ -160,8 +160,6 @@ class KraefteParallelogrammRechteckSkizze(Scene):
 
 class HookeschesGesetzSkizze(Scene):
     def construct(self):
-        # Fester Rahmen, der den gesamten sichtbaren Bereich (14x8) abdeckt
-        # Verhindert das automatische Zentrieren der Bounding-Box durch Manim
         frame_bounds = Square(side_length=8, stroke_opacity=0).scale(1.777)
 
         ceiling_y = 3.2
@@ -237,4 +235,28 @@ class HookeschesGesetzSkizze(Scene):
             arrow_delta_l, label_delta_l,
             vec_f_feder, label_f_feder,
             vec_f, label_f
+        )
+
+class HookeDiagrammSkizze(Scene):
+    def construct(self):
+        frame_bounds = Square(side_length=8, stroke_opacity=0).scale(1.777)
+
+        axes = Axes(
+            x_range=[0, 5, 1],
+            y_range=[0, 5, 1],
+            x_length=5.5,
+            y_length=4.5,
+            axis_config={"color": WHITE, "include_tip": True, "tip_width": 0.2, "tip_height": 0.25},
+            tips=True
+        ).move_to(DOWN * 0.3 + LEFT * 0.5)
+
+        label_x = MathTex(r"\text{Kraft } F", font_size=32).next_to(axes.x_axis.get_end(), RIGHT, buff=0.15)
+        label_y = MathTex(r"\text{Dehnung } \Delta l", font_size=32).next_to(axes.y_axis.get_end(), UP, buff=0.15)
+
+        graph = axes.plot(lambda x: 0.9 * x, x_range=[0, 4.8], color=BLUE, stroke_width=3)
+
+        self.add(
+            frame_bounds,
+            axes, label_x, label_y,
+            graph
         )

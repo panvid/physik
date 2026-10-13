@@ -61,3 +61,33 @@ class ErdeGravitationSkizze(Scene):
             vec_fg_left, label_fg_left,
             vec_fg_bottom, label_fg_bottom
         )
+
+class ErdeEllipsenSkizze(Scene):
+    def construct(self):
+        earth_center = ORIGIN
+        radius_x = 3.2
+        radius_y = 1.8
+
+        earth = Ellipse(width=radius_x * 2, height=radius_y * 2, color=BLUE_B, fill_color=BLUE_E, fill_opacity=0.3, stroke_width=3)
+
+        point_np = Dot(earth_center + UP * radius_y, radius=0.08, color=WHITE)
+        label_np = MathTex(r"\text{NP}", font_size=32).next_to(point_np, UP, buff=0.15)
+
+        point_sp = Dot(earth_center + DOWN * radius_y, radius=0.08, color=WHITE)
+        label_sp = MathTex(r"\text{SP}", font_size=32).next_to(point_sp, DOWN, buff=0.15)
+
+        equator = DashedLine(
+            start=earth_center + LEFT * radius_x,
+            end=earth_center + RIGHT * radius_x,
+            stroke_width=2,
+            color=WHITE,
+            dash_length=0.15
+        )
+        label_equator = MathTex(r"\text{Äquator}", font_size=30).next_to(equator, RIGHT, buff=0.15)
+
+        self.add(
+            earth,
+            equator, label_equator,
+            point_np, label_np,
+            point_sp, label_sp
+        )

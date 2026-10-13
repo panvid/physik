@@ -260,3 +260,96 @@ class HookeDiagrammSkizze(Scene):
             axes, label_x, label_y,
             graph
         )
+
+class FederKopplungSkizze(Scene):
+    def construct(self):
+        frame_bounds = Square(side_length=8, stroke_opacity=0).scale(1.777)
+
+        ceiling_y = 2.7
+        ceiling = Line(start=LEFT * 6, end=RIGHT * 6, stroke_width=4, color=WHITE)
+        ceiling.move_to(np.array([0, ceiling_y, 0]))
+
+        hatch_lines = VGroup()
+        for x in np.arange(-6, 6, 0.4):
+            hatch_lines.add(Line(start=[x, ceiling_y, 0], end=[x + 0.2, ceiling_y + 0.3, 0], stroke_width=1.5, color=GRAY))
+
+        x_left = -2.5
+        x_right = 2.0
+
+        len_s1_unloaded = 1.1
+        len_s2_unloaded = 1.1
+
+        len_s1_loaded = 1.7
+        len_s2_loaded = 1.7
+
+        y_unloaded_mid = ceiling_y - len_s1_unloaded
+        y_unloaded_end = ceiling_y - (len_s1_unloaded + len_s2_unloaded)
+
+        y_loaded_mid = ceiling_y - len_s1_loaded
+        y_loaded_end = ceiling_y - (len_s1_loaded + len_s2_loaded)
+
+        def create_spring(start_pt, length, num_coils=6, radius=0.25):
+            pts = [start_pt]
+            step = length / num_coils
+            for i in range(num_coils):
+                y_center = start_pt[1] - (i + 0.5) * step
+                side = 1 if i % 2 == 0 else -1
+                pts.append(np.array([start_pt[0] + side * radius, y_center, 0]))
+            pts.append(np.array([start_pt[0], start_pt[1] - length, 0]))
+            return VMobject(stroke_width=2, color=LIGHT_GRAY).set_points_as_corners(pts)
+
+        spring_left_1 = create_spring(np.array([x_left, ceiling_y, 0]), len_s1_unloaded)
+        spring_left_2 = create_spring(np.array([x_left, y_unloaded_mid, 0]), len_s2_unloaded)
+
+        label_d1_left = MathTex(r"D_1", font_size=32).next_to(spring_left_1, LEFT, buff=0.2)
+        label_d2_left = MathTex(r"D_2", font_size=32).next_to(spring_left_2, LEFT, buff=0.2)
+
+        spring_right_1 = create_spring(np.array([x_right, ceiling_y, 0]), len_s1_loaded)
+        spring_right_2 = create_spring(np.array([x_right, y_loaded_mid, 0]), len_s2_loaded)
+
+        p_mass_center = np.array([x_right, y_loaded_end - 0.4, 0])
+        mass_box = Square(side_length=0.8, fill_color=GRAY_D, fill_opacity=0.9, stroke_color=WHITE, stroke_width=2).move_to(p_mass_center)
+        label_m = MathTex("m", font_size=32, color=WHITE).next_to(mass_box, RIGHT, buff=0.2)
+
+        vec_ff = Arrow(start=p_mass_center, end=p_mass_center + UP * 1.3, buff=0, color=GREEN, max_tip_length_to_length_ratio=0.15)
+        label_ff = MathTex(r"\vec{F}_F", color=GREEN, font_size=32).next_to(vec_ff, LEFT, buff=0.15)
+
+        vec_fg = Arrow(start=p_mass_center, end=p_mass_center + DOWN * 1.3, buff=0, color=BLUE, max_tip_length_to_length_ratio=0.15)
+        label_fg = MathTex(r"\vec{F}_G", color=BLUE, font_size=32).next_to(vec_fg, RIGHT, buff=0.15)
+
+        dashed_ref_unloaded = DashedLine(
+            start=np.array([x_left, y_unloaded_end, 0]),
+            end=np.array([x_right + 0.8, y_unloaded_end, 0]),
+            stroke_width=1.5,
+            color=GRAY
+        )
+
+        dashed_ref_loaded = DashedLine(
+            start=np.array([x_right, y_loaded_end, 0]),
+            end=np.array([x_left - 0.8, y_loaded_end, 0]),
+            stroke_width=1.5,
+            color=GRAY
+        )
+
+        x_arrow = (x_left + x_right) / 2
+        arrow_delta_l = DoubleArrow(
+            start=np.array([x_arrow, y_unloaded_end, 0]),
+            end=np.array([x_arrow, y_loaded_end, 0]),
+            buff=0,
+            stroke_width=2,
+            color=WHITE,
+            max_tip_length_to_length_ratio=0.12
+        )
+        label_delta_l = MathTex(r"\Delta l", font_size=32).next_to(arrow_delta_l, LEFT, buff=0.15)
+
+        self.add(
+            frame_bounds,
+            ceiling, hatch_lines,
+            spring_left_1, spring_left_2, label_d1_left, label_d2_left,
+            spring_right_1, spring_right_2,
+            mass_box, label_m,
+            vec_ff, label_ff,
+            vec_fg, label_fg,
+            dashed_ref_unloaded, dashed_ref_loaded,
+            arrow_delta_l, label_delta_l
+        )

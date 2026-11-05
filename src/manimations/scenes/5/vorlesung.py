@@ -353,3 +353,22 @@ class FederKopplungSkizze(Scene):
             dashed_ref_unloaded, dashed_ref_loaded,
             arrow_delta_l, label_delta_l
         )
+
+class TraegheitsgesetzFADiagrammSimpel(Scene):
+    def construct(self):
+        axes = Axes(
+            x_range=[0, 6, 1],
+            y_range=[0, 5, 1],
+            x_length=6.5,
+            y_length=4.5,
+            axis_config={"include_numbers": False, "include_tip": True}
+        ).move_to(ORIGIN)
+
+        labels = axes.get_axis_labels(
+            x_label=MathTex("F"),
+            y_label=MathTex("a")
+        )
+
+        graph = axes.plot(lambda f: 0.75 * f, x_range=[0, 5.5], color=BLUE)
+
+        self.add(axes, labels, graph)

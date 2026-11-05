@@ -98,3 +98,68 @@ class ParallelschaltungFedernSkizze(Scene):
             vector_FG_up, label_FG_up,
             vector_FG_down, label_FG_down
         )
+
+class CurlingsteinKraefteSkizzeMitAlphaInnen(Scene):
+    def construct(self):
+        point_origin = RIGHT * 2.0 + UP * 1.5
+
+        length_H = 3.0
+        length_G = 4.0
+
+        point_left = point_origin + LEFT * length_H
+        point_down = point_origin + DOWN * length_G
+        point_diag = point_origin + LEFT * length_H + DOWN * length_G
+
+        vector_FH = Arrow(start=point_origin, end=point_left, buff=0, color=YELLOW)
+        label_FH = MathTex("\\vec{F}_H").next_to(vector_FH, UP, buff=0.1)
+
+        vector_FG = Arrow(start=point_origin, end=point_down, buff=0, color=BLUE)
+        label_FG = MathTex("\\vec{F}_G").next_to(vector_FG, RIGHT, buff=0.1)
+
+        vector_F = Arrow(start=point_origin, end=point_diag, buff=0, color=GREEN)
+        label_F = MathTex("\\vec{F}").next_to(vector_F, DOWN + LEFT, buff=0.05)
+
+        dash_bottom = DashedLine(start=point_down, end=point_diag, color=YELLOW, dash_length=0.1)
+        label_bottom_FH = MathTex("F_H", color=YELLOW).next_to(dash_bottom, DOWN, buff=0.1)
+
+        dash_left = DashedLine(start=point_left, end=point_diag, color=BLUE, dash_length=0.1)
+
+        center_dot = Dot(point=point_origin, radius=0.12, color=WHITE)
+
+        line_FG = Line(start=point_origin, end=point_down)
+        line_F = Line(start=point_origin, end=point_diag)
+
+        angle_alpha = Angle(
+            line_F,
+            line_FG,
+            radius=1.2,
+            other_angle=False,
+            color=WHITE
+        )
+
+        label_alpha = MathTex("\\alpha").move_to(
+            Angle(
+                line_F,
+                line_FG,
+                radius=1.6,
+                other_angle=False
+            ).point_from_proportion(0.5)
+        )
+
+        right_angle = RightAngle(
+            line1=Line(start=point_down, end=point_origin),
+            line2=Line(start=point_down, end=point_diag),
+            length=0.3,
+            color=WHITE
+        )
+
+        self.add(
+            vector_FH, label_FH,
+            vector_FG, label_FG,
+            vector_F, label_F,
+            dash_bottom, label_bottom_FH,
+            dash_left,
+            center_dot,
+            angle_alpha, label_alpha,
+            right_angle
+        )

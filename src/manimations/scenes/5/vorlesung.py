@@ -391,3 +391,29 @@ class MasseBeschleunigungDiagramm(Scene):
         graph = axes.plot(lambda m: 2.5 / m, x_range=[0.5, 5.5], color=BLUE)
 
         self.add(axes, labels, graph)
+
+class WechselwirkungsgesetzSkizze(Scene):
+    def construct(self):
+        circle_A = Circle(radius=0.8, color=BLUE, fill_opacity=0.3).move_to(LEFT * 2.5)
+        label_A = MathTex("A").move_to(circle_A.get_center())
+
+        circle_B = Circle(radius=0.8, color=RED, fill_opacity=0.3).move_to(RIGHT * 2.5)
+        label_B = MathTex("B").move_to(circle_B.get_center())
+
+        vector_FBA = Arrow(
+            start=circle_A.get_center(),
+            end=circle_A.get_center() + RIGHT * 1.5,
+            buff=0,
+            color=BLUE
+        )
+        label_FBA = MathTex("\\vec{F}_{BA}").next_to(vector_FBA, UP)
+
+        vector_FAB = Arrow(
+            start=circle_B.get_center(),
+            end=circle_B.get_center() + LEFT * 1.5,
+            buff=0,
+            color=RED
+        )
+        label_FAB = MathTex("\\vec{F}_{AB}").next_to(vector_FAB, UP)
+
+        self.add(circle_A, label_A, circle_B, label_B, vector_FBA, label_FBA, vector_FAB, label_FAB)

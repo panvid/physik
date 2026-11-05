@@ -417,3 +417,61 @@ class WechselwirkungsgesetzSkizze(Scene):
         label_FAB = MathTex("\\vec{F}_{AB}").next_to(vector_FAB, UP)
 
         self.add(circle_A, label_A, circle_B, label_B, vector_FBA, label_FBA, vector_FAB, label_FAB)
+
+class CrashtestBeruehrungSkizze(Scene):
+    def construct(self):
+        wall = Rectangle(width=0.4, height=3.0, color=GRAY, fill_opacity=0.8).move_to(RIGHT * 3)
+        hatch_lines = VGroup()
+        for y in np.linspace(-1.3, 1.3, 10):
+            line = Line(
+                start=wall.get_corner(UR) + DOWN * (1.5 - y),
+                end=wall.get_corner(UR) + DOWN * (1.5 - y) + RIGHT * 0.4 + DOWN * 0.3,
+                color=GRAY,
+                stroke_width=2
+            )
+            hatch_lines.add(line)
+
+        wall_left_x = wall.get_left()[0]
+        car_width = 2.4
+        car_height = 1.0
+
+        car_center_x = wall_left_x - (car_width / 2.0)
+        car_body = Rectangle(width=car_width, height=car_height, color=BLUE, fill_opacity=0.3).move_to(
+            RIGHT * car_center_x)
+
+        crumple_width = 0.8
+        crumple_zone = Rectangle(
+            width=crumple_width,
+            height=car_height,
+            color=RED,
+            fill_opacity=0.4
+        ).move_to(RIGHT * (wall_left_x - crumple_width / 2.0))
+
+        wheel_left = Circle(radius=0.3, color=WHITE, fill_opacity=0.8).move_to(
+            RIGHT * (car_center_x - 0.7) + DOWN * 0.5)
+        wheel_right = Circle(radius=0.3, color=WHITE, fill_opacity=0.8).move_to(
+            RIGHT * (car_center_x + 0.5) + DOWN * 0.5)
+        car_label = MathTex("\\text{Auto}").move_to(RIGHT * (car_center_x - 0.3))
+        car = VGroup(car_body, crumple_zone, wheel_left, wheel_right, car_label)
+
+        vector_v0 = Arrow(
+            start=car_body.get_top() + LEFT * 0.8 + UP * 0.5,
+            end=car_body.get_top() + RIGHT * 0.8 + UP * 0.5,
+            buff=0,
+            color=GREEN
+        )
+        label_v0 = MathTex("\\vec{v}_0").next_to(vector_v0, UP)
+
+        s_start = wall_left_x - crumple_width
+        s_end = wall_left_x
+        y_pos = -1.2
+
+        arrow_s = DoubleArrow(
+            start=np.array([s_start, y_pos, 0]),
+            end=np.array([s_end, y_pos, 0]),
+            buff=0,
+            color=YELLOW
+        )
+        label_s = MathTex("s = 0{,}7\\,\\text{m}").next_to(arrow_s, DOWN)
+
+        self.add(wall, hatch_lines, car, vector_v0, label_v0, arrow_s, label_s)

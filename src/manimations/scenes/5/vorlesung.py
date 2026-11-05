@@ -504,3 +504,86 @@ class ErdbeschleunigungSkizze(Scene):
         label_Fe = MathTex("\\vec{F}_e").next_to(vector_Fe, LEFT, buff=0.1)
 
         self.add(earth, label_M, mass_point, label_m, vector_FG, label_FG, vector_Fe, label_Fe)
+
+class AtwoodscheFallmaschineSkizze(Scene):
+    def construct(self):
+        pulley_center = UP * 2.2
+        pulley_radius = 0.8
+        pulley = Circle(radius=pulley_radius, color=GRAY, fill_opacity=0.3).move_to(pulley_center)
+        pulley_axle = Dot(point=pulley_center, radius=0.08, color=WHITE)
+
+        ground_y = -2.8
+        ground = Line(start=LEFT * 3, end=RIGHT * 3, color=WHITE, stroke_width=3).move_to(DOWN * 2.8)
+
+        left_x = pulley_center[0] - pulley_radius
+        right_x = pulley_center[0] + pulley_radius
+
+        mass_height = 0.8
+        mass_width = 0.8
+
+        left_mass_center = np.array([left_x, ground_y + (mass_height / 2.0), 0])
+        left_rope = Line(
+            start=np.array([left_x, pulley_center[1], 0]),
+            end=left_mass_center + UP * (mass_height / 2.0),
+            color=WHITE,
+            stroke_width=2
+        )
+
+        right_mass_y = -0.5
+        right_mass_center = np.array([right_x, right_mass_y, 0])
+        right_rope = Line(
+            start=np.array([right_x, pulley_center[1], 0]),
+            end=right_mass_center + UP * (mass_height / 2.0),
+            color=WHITE,
+            stroke_width=2
+        )
+
+        left_mass_box = Rectangle(width=mass_width, height=mass_height, color=BLUE, fill_opacity=0.3).move_to(left_mass_center)
+        left_mass_label = MathTex("m").move_to(left_mass_center)
+        left_mass = VGroup(left_mass_box, left_mass_label)
+
+        right_mass_box = Rectangle(width=mass_width, height=mass_height, color=RED, fill_opacity=0.3).move_to(right_mass_center)
+        right_mass_label = MathTex("m").move_to(right_mass_center)
+        right_mass = VGroup(right_mass_box, right_mass_label)
+
+        vector_F2_left = Arrow(
+            start=left_mass_center,
+            end=left_mass_center + DOWN * 1.2,
+            buff=0,
+            color=YELLOW
+        )
+        label_F2_left = MathTex("\\vec{F}_2").next_to(vector_F2_left, LEFT, buff=0.1)
+
+        vector_F2_right = Arrow(
+            start=right_mass_center,
+            end=right_mass_center + UP * 1.2,
+            buff=0,
+            color=YELLOW
+        )
+        label_F2_right = MathTex("\\vec{F}_2").next_to(vector_F2_right, RIGHT, buff=0.1)
+
+        vector_F1_right = Arrow(
+            start=right_mass_center,
+            end=right_mass_center + DOWN * 1.2,
+            buff=0,
+            color=GREEN
+        )
+        label_F1_right = MathTex("\\vec{F}_1").next_to(vector_F1_right, RIGHT, buff=0.1)
+
+        arrow_s = DoubleArrow(
+            start=np.array([right_x + 1.2, ground_y, 0]),
+            end=np.array([right_x + 1.2, right_mass_center[1] - (mass_height / 2.0), 0]),
+            buff=0,
+            color=WHITE
+        )
+        label_s = MathTex("s").next_to(arrow_s, RIGHT, buff=0.1)
+
+        self.add(
+            pulley, pulley_axle, ground,
+            left_rope, right_rope,
+            left_mass, right_mass,
+            vector_F2_left, label_F2_left,
+            vector_F2_right, label_F2_right,
+            vector_F1_right, label_F1_right,
+            arrow_s, label_s
+        )

@@ -475,3 +475,32 @@ class CrashtestBeruehrungSkizze(Scene):
         label_s = MathTex("s = 0{,}7\\,\\text{m}").next_to(arrow_s, DOWN)
 
         self.add(wall, hatch_lines, car, vector_v0, label_v0, arrow_s, label_s)
+
+class ErdbeschleunigungSkizze(Scene):
+    def construct(self):
+        earth_center = DOWN * 0.8
+        earth_radius = 2.2
+        earth = Circle(radius=earth_radius, color=BLUE, fill_opacity=0.2).move_to(earth_center)
+        label_M = MathTex("M", color=WHITE).move_to(earth_center)
+
+        mass_point_pos = earth_center + UP * earth_radius
+        mass_point = Dot(point=mass_point_pos, radius=0.12, color=RED)
+        label_m = MathTex("m", color=WHITE).next_to(mass_point, UP, buff=0.15)
+
+        vector_FG = Arrow(
+            start=mass_point_pos,
+            end=mass_point_pos + DOWN * 1.4,
+            buff=0,
+            color=RED
+        )
+        label_FG = MathTex("\\vec{F}_G").next_to(vector_FG, RIGHT, buff=0.1)
+
+        vector_Fe = Arrow(
+            start=earth_center,
+            end=earth_center + UP * 1.4,
+            buff=0,
+            color=BLUE
+        )
+        label_Fe = MathTex("\\vec{F}_e").next_to(vector_Fe, LEFT, buff=0.1)
+
+        self.add(earth, label_M, mass_point, label_m, vector_FG, label_FG, vector_Fe, label_Fe)

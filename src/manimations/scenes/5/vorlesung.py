@@ -709,3 +709,34 @@ class HelikopterDiagonalRotorSkizze(Scene):
             vector_FGH, label_FGH,
             vector_FGA, label_FGA
         )
+
+class HelikopterAutoKraefteSkizze(Scene):
+    def construct(self):
+        center_point = Dot(point=ORIGIN, radius=0.15, color=WHITE)
+        label_point = MathTex("\\text{Heli + Auto}").next_to(center_point, RIGHT, buff=0.25)
+
+        vector_FAuf = Arrow(
+            start=ORIGIN,
+            end=UP * 2.2,
+            buff=0,
+            color=GREEN
+        )
+        label_FAuf = MathTex("\\vec{F}_{\\text{Auf}}").next_to(vector_FAuf, LEFT, buff=0.1)
+
+        vector_FGH = Arrow(
+            start=ORIGIN,
+            end=DOWN * 1.5,
+            buff=0,
+            color=BLUE
+        )
+        label_FGH = MathTex("\\vec{F}_{GH}").next_to(vector_FGH, LEFT, buff=0.1)
+
+        vector_FGA = Arrow(
+            start=ORIGIN,
+            end=DOWN * 2.6,
+            buff=0,
+            color=RED
+        )
+        label_FGA = MathTex("\\vec{F}_{GA}").next_to(vector_FGA, RIGHT, buff=0.1)
+
+        self.add(center_point, label_point, vector_FAuf, label_FAuf, vector_FGH, label_FGH, vector_FGA, label_FGA)

@@ -587,3 +587,125 @@ class AtwoodscheFallmaschineSkizze(Scene):
             vector_F1_right, label_F1_right,
             arrow_s, label_s
         )
+
+class HelikopterDiagonalRotorSkizze(Scene):
+    def construct(self):
+        heli_center = UP * 1.8
+
+        main_body = Ellipse(width=2.0, height=0.9, color=BLUE, fill_opacity=0.4).move_to(heli_center)
+        cockpit_window = Arc(radius=0.4, start_angle=PI / 4, angle=PI / 2, color=LIGHT_GRAY, fill_opacity=0.6).move_to(
+            heli_center + RIGHT * 0.6 + UP * 0.1)
+        tail_boom = Line(start=heli_center + LEFT * 0.8, end=heli_center + LEFT * 2.2, color=BLUE, stroke_width=5)
+        tail_fin = Polygon(
+            heli_center + LEFT * 2.2,
+            heli_center + LEFT * 2.5 + UP * 0.4,
+            heli_center + LEFT * 2.4 + DOWN * 0.2,
+            color=BLUE, fill_opacity=0.4
+        )
+        tail_rotor = Line(start=heli_center + LEFT * 2.45 + UP * 0.3, end=heli_center + LEFT * 2.45 + DOWN * 0.1,
+                          color=WHITE, stroke_width=2)
+
+        main_rotor_shaft = Line(start=heli_center + UP * 0.45, end=heli_center + UP * 0.65, color=GRAY, stroke_width=3)
+        rotor_hub_center = heli_center + UP * 0.65
+
+        blade_len = 1.6
+        blade_angle = 0.35
+
+        b1_end = rotor_hub_center + np.array([-blade_len * np.cos(blade_angle), blade_len * np.sin(blade_angle), 0])
+        b2_end = rotor_hub_center + np.array([blade_len * np.cos(blade_angle), -blade_len * np.sin(blade_angle), 0])
+        b3_end = rotor_hub_center + np.array([-blade_len * np.cos(blade_angle), -blade_len * np.sin(blade_angle), 0])
+        b4_end = rotor_hub_center + np.array([blade_len * np.cos(blade_angle), blade_len * np.sin(blade_angle), 0])
+
+        blade1 = Line(start=rotor_hub_center, end=b1_end, color=WHITE, stroke_width=3)
+        blade2 = Line(start=rotor_hub_center, end=b2_end, color=WHITE, stroke_width=3)
+        blade3 = Line(start=rotor_hub_center, end=b3_end, color=WHITE, stroke_width=3)
+        blade4 = Line(start=rotor_hub_center, end=b4_end, color=WHITE, stroke_width=3)
+
+        skid_strut_left = Line(start=heli_center + LEFT * 0.4 + DOWN * 0.4, end=heli_center + LEFT * 0.5 + DOWN * 0.65,
+                               color=GRAY, stroke_width=2)
+        skid_strut_right = Line(start=heli_center + RIGHT * 0.4 + DOWN * 0.4,
+                                end=heli_center + RIGHT * 0.3 + DOWN * 0.65, color=GRAY, stroke_width=2)
+        skid_bar = Line(start=heli_center + LEFT * 0.9 + DOWN * 0.65, end=heli_center + RIGHT * 0.8 + DOWN * 0.65,
+                        color=GRAY, stroke_width=3)
+
+        heli = VGroup(
+            main_body, cockpit_window, tail_boom, tail_fin, tail_rotor,
+            main_rotor_shaft, blade1, blade2, blade3, blade4,
+            skid_strut_left, skid_strut_right, skid_bar
+        )
+
+        car_center = DOWN * 1.8
+
+        car_chassis = Polygon(
+            car_center + LEFT * 1.2 + DOWN * 0.3,
+            car_center + RIGHT * 1.2 + DOWN * 0.3,
+            car_center + RIGHT * 1.2 + UP * 0.0,
+            car_center + RIGHT * 0.6 + UP * 0.15,
+            car_center + RIGHT * 0.3 + UP * 0.4,
+            car_center + LEFT * 0.5 + UP * 0.4,
+            car_center + LEFT * 0.9 + UP * 0.15,
+            car_center + LEFT * 1.2 + UP * 0.0,
+            color=RED, fill_opacity=0.4
+        )
+        window = Polygon(
+            car_center + LEFT * 0.4 + UP * 0.35,
+            car_center + RIGHT * 0.25 + UP * 0.35,
+            car_center + RIGHT * 0.5 + UP * 0.15,
+            car_center + LEFT * 0.7 + UP * 0.15,
+            color=LIGHT_GRAY, fill_opacity=0.6
+        )
+        wheel_left = Circle(radius=0.22, color=DARK_GRAY, fill_opacity=1.0).move_to(
+            car_center + LEFT * 0.65 + DOWN * 0.3)
+        wheel_right = Circle(radius=0.22, color=DARK_GRAY, fill_opacity=1.0).move_to(
+            car_center + RIGHT * 0.65 + DOWN * 0.3)
+        rim_left = Circle(radius=0.09, color=WHITE, fill_opacity=0.8).move_to(wheel_left.get_center())
+        rim_right = Circle(radius=0.09, color=WHITE, fill_opacity=0.8).move_to(wheel_right.get_center())
+
+        car = VGroup(car_chassis, window, wheel_left, wheel_right, rim_left, rim_right)
+
+        rope = Line(
+            start=heli_center + DOWN * 0.65,
+            end=car_center + UP * 0.4,
+            color=WHITE,
+            stroke_width=2
+        )
+
+        vector_a = Arrow(
+            start=heli_center + UP * 1.0,
+            end=heli_center + UP * 2.2,
+            buff=0,
+            color=YELLOW
+        )
+        label_a = MathTex("\\vec{a}").next_to(vector_a, RIGHT, buff=0.1)
+
+        vector_FAuf = Arrow(
+            start=heli_center,
+            end=heli_center + UP * 1.4,
+            buff=0,
+            color=GREEN
+        )
+        label_FAuf = MathTex("\\vec{F}_{\\text{Auf}}").next_to(vector_FAuf, LEFT, buff=0.1)
+
+        vector_FGH = Arrow(
+            start=heli_center,
+            end=heli_center + DOWN * 1.2,
+            buff=0,
+            color=BLUE
+        )
+        label_FGH = MathTex("\\vec{F}_{GH}").next_to(vector_FGH, LEFT, buff=0.1)
+
+        vector_FGA = Arrow(
+            start=car_center,
+            end=car_center + DOWN * 1.2,
+            buff=0,
+            color=RED
+        )
+        label_FGA = MathTex("\\vec{F}_{GA}").next_to(vector_FGA, RIGHT, buff=0.1)
+
+        self.add(
+            rope, heli, car,
+            vector_a, label_a,
+            vector_FAuf, label_FAuf,
+            vector_FGH, label_FGH,
+            vector_FGA, label_FGA
+        )

@@ -80,3 +80,60 @@ class SprinterStartblockSkizzeAndersrum(Scene):
             vector_F_prime, label_F_prime,
             vector_FH, label_FH
         )
+
+class SprinterKraefteparallelogrammSkizze(Scene):
+    def construct(self):
+        axes = Axes(
+            x_range=[0, 4, 1],
+            y_range=[0, 3, 1],
+            x_length=5.0,
+            y_length=3.5,
+            axis_config={"include_numbers": False, "include_tip": True}
+        ).move_to(DOWN * 0.5 + LEFT * 0.5)
+
+        origin = axes.c2p(0, 0)
+        pt_H = axes.c2p(3.2, 0)
+        pt_V = axes.c2p(0, 1.8)
+        pt_diag = axes.c2p(3.2, 1.8)
+
+        vector_FH = Arrow(start=origin, end=pt_H, buff=0, color=YELLOW)
+        label_FH = MathTex("\\vec{F}_H").next_to(vector_FH, DOWN, buff=0.15)
+
+        vector_FV = Arrow(start=origin, end=pt_V, buff=0, color=BLUE)
+        label_FV = MathTex("\\vec{F}_V").next_to(vector_FV, LEFT, buff=0.15)
+
+        vector_F = Arrow(start=origin, end=pt_diag, buff=0, color=GREEN)
+        label_F = MathTex("\\vec{F}").next_to(vector_F, UP + LEFT, buff=0.05)
+
+        dash_top = DashedLine(start=pt_V, end=pt_diag, color=YELLOW, dash_length=0.1)
+        label_top_FH = MathTex("F_H", color=YELLOW).next_to(dash_top, UP, buff=0.1)
+
+        dash_right = DashedLine(start=pt_H, end=pt_diag, color=BLUE, dash_length=0.1)
+        label_right_FV = MathTex("F_V", color=BLUE).next_to(dash_right, RIGHT, buff=0.1)
+
+        angle_alpha = Arc(
+            radius=0.9,
+            start_angle=0,
+            angle=np.arctan2(1.8, 3.2),
+            arc_center=origin,
+            color=WHITE
+        )
+        label_alpha = MathTex("\\alpha").move_to(origin + np.array([1.2, 0.3, 0]))
+
+        right_angle = RightAngle(
+            line1=Line(start=pt_H, end=origin),
+            line2=Line(start=pt_H, end=pt_diag),
+            length=0.3,
+            color=WHITE
+        )
+
+        self.add(
+            axes,
+            vector_FH, label_FH,
+            vector_FV, label_FV,
+            vector_F, label_F,
+            dash_top, label_top_FH,
+            dash_right, label_right_FV,
+            angle_alpha, label_alpha,
+            right_angle
+        )

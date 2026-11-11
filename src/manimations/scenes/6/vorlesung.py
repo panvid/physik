@@ -305,3 +305,40 @@ class GleitreibungSkizze(Scene):
             arrow_fzug, label_fzug,
             arrow_fr, label_fr
         )
+
+class RollreibungSkizze(Scene):
+    def construct(self):
+        wheel_radius = 0.35
+        boden = Line(LEFT * 4 + DOWN * wheel_radius, RIGHT * 4 + DOWN * wheel_radius, color=WHITE, stroke_width=3)
+
+        wheel_left = Circle(radius=wheel_radius, color=WHITE, stroke_width=3)
+        wheel_left.move_to(LEFT * 0.8)
+        wheel_right = Circle(radius=wheel_radius, color=WHITE, stroke_width=3)
+        wheel_right.move_to(RIGHT * 0.8)
+
+        box_width = 2.4
+        box_height = 0.9
+        box_center = UP * (box_height / 2.0 + 0.05)
+        koerper = Rectangle(width=box_width, height=box_height, color=BLUE, fill_opacity=0.3, stroke_width=3)
+        koerper.move_to(box_center)
+
+        v_start = box_center + UP * 0.85
+        v_end = v_start + RIGHT * 1.5
+        arrow_v = Arrow(v_start, v_end, buff=0, color=WHITE, stroke_width=3, max_tip_length_to_length_ratio=0.25)
+        label_v = MathTex(r"v = \text{konst.}", color=WHITE).next_to(arrow_v, UP, buff=0.1)
+
+        kraft_laenge = 2.5
+        arrow_fzug = Arrow(box_center, box_center + RIGHT * kraft_laenge, buff=0, color=YELLOW, stroke_width=4,
+                           max_tip_length_to_length_ratio=0.2)
+        arrow_fr = Arrow(box_center, box_center + LEFT * kraft_laenge, buff=0, color=RED, stroke_width=4,
+                         max_tip_length_to_length_ratio=0.2)
+
+        label_fzug = MathTex(r"F_{\text{Zug}}", color=YELLOW).next_to(arrow_fzug.get_end(), RIGHT)
+        label_fr = MathTex(r"F_{\text{R}}", color=RED).next_to(arrow_fr.get_end(), LEFT)
+
+        self.add(
+            boden, wheel_left, wheel_right, koerper,
+            arrow_v, label_v,
+            arrow_fzug, label_fzug,
+            arrow_fr, label_fr
+        )

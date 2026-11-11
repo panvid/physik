@@ -493,3 +493,64 @@ class FesteRolle(Scene):
             arrow_fg, label_fg,
             arrow_shub, label_shub
         )
+
+class LoseRolle(Scene):
+    def construct(self):
+        decke = Line(LEFT * 2.5 + UP * 3, RIGHT * 2.5 + UP * 3, color=WHITE, stroke_width=4)
+
+        hatch_lines = []
+        for x in np.linspace(-2.3, 2.3, 12):
+            hatch_lines.append(Line(np.array([x, 3.0, 0]), np.array([x + 0.2, 3.25, 0]), color=WHITE, stroke_width=1.5))
+
+        pulley_center = DOWN * 0.2
+        pulley_radius = 0.8
+
+        left_x = pulley_center[0] - pulley_radius
+        right_x = pulley_center[0] + pulley_radius
+
+        rolle_outer = Circle(radius=pulley_radius, color=WHITE, stroke_width=3).move_to(pulley_center)
+        rolle_inner = Dot(pulley_center, radius=0.08, color=WHITE)
+
+        befestigung_decke = Dot(np.array([right_x, 3.0, 0]), radius=0.08, color=WHITE)
+
+        rope_right = Line(np.array([right_x, 3.0, 0]), np.array([right_x, pulley_center[1], 0]), color=GRAY,
+                          stroke_width=3)
+        rope_arc = Arc(radius=pulley_radius, start_angle=0, angle=-PI, arc_center=pulley_center, color=GRAY,
+                       stroke_width=3)
+        rope_left = Line(np.array([left_x, pulley_center[1], 0]), np.array([left_x, 2.5, 0]), color=GRAY,
+                         stroke_width=3)
+
+        p_left_arrow = np.array([left_x, pulley_center[1] + 0.4, 0])
+        arrow_fzug_left = Arrow(p_left_arrow, p_left_arrow + UP * 1.5, buff=0, color=YELLOW, stroke_width=4,
+                                max_tip_length_to_length_ratio=0.2)
+        label_fzug_left = MathTex(r"F_{\text{Zug}}", color=YELLOW).next_to(arrow_fzug_left, LEFT, buff=0.15)
+
+        p_right_arrow = np.array([right_x, pulley_center[1] + 0.4, 0])
+        arrow_fzug_right = Arrow(p_right_arrow, p_right_arrow + UP * 1.5, buff=0, color=YELLOW, stroke_width=4,
+                                 max_tip_length_to_length_ratio=0.2)
+        label_fzug_right = MathTex(r"F_{\text{Zug}}", color=YELLOW).next_to(arrow_fzug_right, RIGHT, buff=0.15)
+
+        box_center = pulley_center + DOWN * 1.7
+        box_side = 1.0
+
+        hanger = Line(pulley_center, box_center + UP * (box_side / 2.0), color=WHITE, stroke_width=3)
+        gewicht = Square(side_length=box_side, color=BLUE, fill_opacity=0.3, stroke_width=3).move_to(box_center)
+
+        arrow_fh = Arrow(box_center, box_center + UP * 1.4, buff=0, color=GREEN, stroke_width=4,
+                         max_tip_length_to_length_ratio=0.2)
+        label_fh = MathTex(r"F_{\text{H}}", color=GREEN).next_to(arrow_fh.get_end(), RIGHT, buff=0.15)
+
+        arrow_fg = Arrow(box_center, box_center + DOWN * 1.6, buff=0, color=RED, stroke_width=4,
+                         max_tip_length_to_length_ratio=0.2)
+        label_fg = MathTex(r"F_{\text{G}}", color=RED).next_to(arrow_fg.get_end(), DOWN, buff=0.15)
+
+        self.add(
+            decke, *hatch_lines, befestigung_decke,
+            rolle_outer, rolle_inner, hanger,
+            rope_right, rope_arc, rope_left,
+            arrow_fzug_left, label_fzug_left,
+            arrow_fzug_right, label_fzug_right,
+            gewicht,
+            arrow_fh, label_fh,
+            arrow_fg, label_fg
+        )

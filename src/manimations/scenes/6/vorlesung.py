@@ -555,7 +555,6 @@ class LoseRolle(Scene):
             arrow_fg, label_fg
         )
 
-
 class Flaschenzug(Scene):
     def construct(self):
         decke = Line(LEFT * 3 + UP * 3, RIGHT * 3 + UP * 3, color=WHITE, stroke_width=4)
@@ -624,4 +623,34 @@ class Flaschenzug(Scene):
             arrow_fzug_left, label_fzug_left,
             arrow_fzug_right, label_fzug_right,
             label_feste_rolle, label_lose_rolle
+        )
+
+class MechanischeArbeit(Scene):
+    def construct(self):
+        p_start = LEFT * 3.0
+        p_end = RIGHT * 3.0
+
+        path_line = DashedLine(p_start, p_end, color=GRAY, stroke_width=2, dash_length=0.15)
+
+        dot_start = Dot(p_start, radius=0.12, color=BLUE)
+        dot_end = Dot(p_end, radius=0.12, color=BLUE)
+
+        kraft_laenge = 2.0
+        arrow_f1 = Arrow(p_start, p_start + RIGHT * kraft_laenge, buff=0, color=RED, stroke_width=4,
+                         max_tip_length_to_length_ratio=0.2)
+        label_f1 = MathTex(r"\vec{F}", color=RED).next_to(arrow_f1, UP, buff=0.15)
+
+        arrow_f2 = Arrow(p_end, p_end + RIGHT * kraft_laenge, buff=0, color=RED, stroke_width=4,
+                         max_tip_length_to_length_ratio=0.2)
+        label_f2 = MathTex(r"\vec{F}", color=RED).next_to(arrow_f2, UP, buff=0.15)
+
+        brace_ds = BraceBetweenPoints(p_start, p_end, direction=DOWN)
+        label_ds = MathTex(r"\Delta s").next_to(brace_ds, DOWN, buff=0.15)
+
+        self.add(
+            path_line,
+            dot_start, dot_end,
+            arrow_f1, label_f1,
+            arrow_f2, label_f2,
+            brace_ds, label_ds
         )

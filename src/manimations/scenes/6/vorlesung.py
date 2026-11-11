@@ -702,3 +702,91 @@ class MechanischeArbeitKomponenten(Scene):
             arrow_f2, label_f2,
             brace_ds, label_ds
         )
+
+class BahnkurveArbeit(Scene):
+    def construct(self):
+        def path_func(t):
+            return np.array([t, 1.2 * np.sin(0.75 * t) + 0.25 * t, 0])
+
+        t_start, t_end = -4.0, 4.0
+        p_A = path_func(t_start)
+        p_B = path_func(t_end)
+
+        bahnkurve = ParametricFunction(
+            path_func,
+            t_range=[t_start, t_end],
+            color=WHITE,
+            stroke_width=3
+        )
+
+        dot_A = Dot(p_A, radius=0.1, color=BLUE)
+        dot_B = Dot(p_B, radius=0.1, color=BLUE)
+
+        label_A = MathTex("A", color=BLUE).next_to(dot_A, DOWN + LEFT, buff=0.15)
+        label_B = MathTex("B", color=BLUE).next_to(dot_B, UP + RIGHT, buff=0.15)
+
+        t_sample = [-3.0, -1.8, -0.6, 1.7, 2.9]
+        angles = [40 * DEGREES, 75 * DEGREES, -25 * DEGREES, 60 * DEGREES, 30 * DEGREES]
+        lengths = [1.1, 1.0, 1.1, 1.1, 1.0]
+
+        arrows_F = []
+        for t, ang, L in zip(t_sample, angles, lengths):
+            p = path_func(t)
+            dt = 0.01
+            tangent = (path_func(t + dt) - path_func(t - dt))
+            unit_tangent = tangent / np.linalg.norm(tangent)
+
+            cos_a, sin_a = np.cos(ang), np.sin(ang)
+            f_dir = np.array([
+                unit_tangent[0] * cos_a - unit_tangent[1] * sin_a,
+                unit_tangent[0] * sin_a + unit_tangent[1] * cos_a,
+                0
+            ])
+
+            arr = Arrow(p, p + f_dir * L, buff=0, color=RED_B, stroke_width=3, max_tip_length_to_length_ratio=0.25)
+            arrows_F.append(arr)
+
+        t_mid = 0.5
+        p_mid = path_func(t_mid)
+        dt = 0.01
+        tangent_mid = (path_func(t_mid + dt) - path_func(t_mid - dt))
+        unit_tangent_mid = tangent_mid / np.linalg.norm(tangent_mid)
+
+        alpha_val = 45 * DEGREES
+        f_len_mid = 2.2
+        cos_m, sin_m = np.cos(alpha_val), np.sin(alpha_val)
+        f_dir_mid = np.array([
+            unit_tangent_mid[0] * cos_m - unit_tangent_mid[1] * sin_m,
+            unit_tangent_mid[0] * sin_m + unit_tangent_mid[1] * cos_m,
+            0
+        ])
+
+        dot_mid = Dot(p_mid, radius=0.09, color=YELLOW)
+
+        tangent_line = DashedLine(
+            p_mid - unit_tangent_mid * 0.8,
+            p_mid + unit_tangent_mid * 2.2,
+            color=GRAY,
+            stroke_width=2
+        )
+
+        arrow_F_mid = Arrow(p_mid, p_mid + f_dir_mid * f_len_mid, buff=0, color=RED, stroke_width=4,
+                            max_tip_length_to_length_ratio=0.2)
+        label_F_mid = MathTex(r"\vec{F}", color=RED).next_to(arrow_F_mid.get_end(), UP + RIGHT, buff=0.1)
+
+        line_tangent_ref = Line(p_mid, p_mid + unit_tangent_mid * 1.8)
+        line_F_ref = Line(p_mid, p_mid + f_dir_mid * 1.8)
+
+        angle_alpha = Angle(line_tangent_ref, line_F_ref, radius=0.7, color=WHITE)
+        label_alpha = MathTex(r"\alpha").next_to(angle_alpha, UP, buff=0.1).shift(RIGHT * 0.05)
+
+        self.add(
+            bahnkurve,
+            dot_A, label_A,
+            dot_B, label_B,
+            *arrows_F,
+            tangent_line,
+            dot_mid,
+            arrow_F_mid, label_F_mid,
+            angle_alpha, label_alpha
+        )

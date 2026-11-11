@@ -790,3 +790,59 @@ class BahnkurveArbeit(Scene):
             arrow_F_mid, label_F_mid,
             angle_alpha, label_alpha
         )
+
+class HubarbeitSkizze(Scene):
+    def construct(self):
+        y_bottom = -2.5
+        y_start = -2.0
+        y_end = 1.2
+
+        x_box = -1.8
+        x_ds = -0.4
+        x_h = 1.8
+
+        boden = Line(LEFT * 4.5 + UP * y_bottom, RIGHT * 4.5 + UP * y_bottom, color=WHITE, stroke_width=3)
+
+        box_width = 1.5
+        box_height = 0.9
+
+        p_start = np.array([x_box, y_start, 0])
+        p_end = np.array([x_box, y_end, 0])
+
+        koerper_start = Rectangle(width=box_width, height=box_height, color=BLUE, fill_opacity=0.3, stroke_width=3)
+        koerper_start.move_to(p_start)
+
+        koerper_end = Rectangle(width=box_width, height=box_height, color=BLUE, fill_opacity=0.3, stroke_width=3)
+        koerper_end.move_to(p_end)
+
+        kraft_laenge = 1.3
+        arrow_f1 = Arrow(p_start, p_start + UP * kraft_laenge, buff=0, color=GREEN, stroke_width=4,
+                         max_tip_length_to_length_ratio=0.2)
+        label_f1 = MathTex(r"\vec{F}_{\text{Hub}}", color=GREEN).next_to(arrow_f1, LEFT, buff=0.15)
+
+        arrow_f2 = Arrow(p_end, p_end + UP * kraft_laenge, buff=0, color=GREEN, stroke_width=4,
+                         max_tip_length_to_length_ratio=0.2)
+        label_f2 = MathTex(r"\vec{F}_{\text{Hub}}", color=GREEN).next_to(arrow_f2, LEFT, buff=0.15)
+
+        p_ds_start = np.array([x_ds, y_start, 0])
+        p_ds_end = np.array([x_ds, y_end, 0])
+        brace_ds = BraceBetweenPoints(p_ds_start, p_ds_end, direction=RIGHT)
+        label_ds = MathTex(r"\Delta s").next_to(brace_ds, RIGHT, buff=0.15)
+
+        p_h_start = np.array([x_h, y_bottom, 0])
+        p_h_end = np.array([x_h, y_end, 0])
+        brace_h = BraceBetweenPoints(p_h_start, p_h_end, direction=RIGHT)
+        label_h = MathTex("h").next_to(brace_h, RIGHT, buff=0.15)
+
+        dash_top = DashedLine(p_end, np.array([x_h + 0.5, y_end, 0]), color=GRAY, stroke_width=1.5)
+        dash_ds_start = DashedLine(p_start, np.array([x_ds + 0.2, y_start, 0]), color=GRAY, stroke_width=1.5)
+
+        self.add(
+            boden,
+            dash_top, dash_ds_start,
+            koerper_start, koerper_end,
+            arrow_f1, label_f1,
+            arrow_f2, label_f2,
+            brace_ds, label_ds,
+            brace_h, label_h
+        )

@@ -892,3 +892,48 @@ class ReibungsarbeitSkizze(Scene):
             arrow_fzug_2, label_fzug_2,
             brace_ds, label_ds
         )
+
+
+class BeschleunigungsarbeitSkizze(Scene):
+    def construct(self):
+        y_main = 0.6
+        x_left = -2.8
+        x_right = 2.8
+
+        p_left = np.array([x_left, y_main, 0])
+        p_right = np.array([x_right, y_main, 0])
+
+        path_line = DashedLine(p_left, p_right, color=GRAY, stroke_width=2, dash_length=0.15)
+
+        dot_left = Dot(p_left, radius=0.12, color=BLUE)
+        dot_right = Dot(p_right, radius=0.12, color=BLUE)
+
+        kraft_laenge = 2.0
+        arrow_f = Arrow(p_left, p_left + RIGHT * kraft_laenge, buff=0, color=RED, stroke_width=4,
+                        max_tip_length_to_length_ratio=0.2)
+        label_f = MathTex(r"\vec{F}", color=RED).next_to(arrow_f, UP, buff=0.15)
+
+        v0_laenge = 1.3
+        p_v0_start = p_left + DOWN * 0.75
+        arrow_v0 = Arrow(p_v0_start, p_v0_start + RIGHT * v0_laenge, buff=0, color=TEAL, stroke_width=3,
+                         max_tip_length_to_length_ratio=0.25)
+        label_v0 = MathTex(r"\vec{v}_0", color=TEAL).next_to(arrow_v0, LEFT, buff=0.15)
+
+        v_laenge = 2.4
+        arrow_v = Arrow(p_right, p_right + RIGHT * v_laenge, buff=0, color=TEAL, stroke_width=4,
+                        max_tip_length_to_length_ratio=0.2)
+        label_v = MathTex(r"\vec{v}", color=TEAL).next_to(arrow_v, UP, buff=0.15)
+
+        p_ds_start = np.array([x_left, -1.0, 0])
+        p_ds_end = np.array([x_right, -1.0, 0])
+        brace_ds = BraceBetweenPoints(p_ds_start, p_ds_end, direction=DOWN)
+        label_ds = MathTex(r"\Delta s").next_to(brace_ds, DOWN, buff=0.15)
+
+        self.add(
+            path_line,
+            dot_left, dot_right,
+            arrow_f, label_f,
+            arrow_v0, label_v0,
+            arrow_v, label_v,
+            brace_ds, label_ds
+        )

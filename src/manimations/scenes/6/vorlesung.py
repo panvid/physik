@@ -130,3 +130,54 @@ class GeneigteEbene(Scene):
             arrow_FH, label_FH,
             arrow_FGN, label_FGN
         )
+
+class Kraefteparallelogramm(Scene):
+    def construct(self):
+        alpha_val = 32 * DEGREES
+        L = 4.0
+
+        O = UP * 1.8
+        P_G = O + DOWN * L
+
+        u_H = np.array([np.cos(alpha_val), -np.sin(alpha_val), 0])
+        u_GH = np.array([-np.sin(alpha_val), -np.cos(alpha_val), 0])
+
+        P_H = O + u_H * (L * np.sin(alpha_val))
+        P_GH = O + u_GH * (L * np.cos(alpha_val))
+
+        arrow_FG = Arrow(O, P_G, buff=0, color=RED, stroke_width=4, max_tip_length_to_length_ratio=0.15)
+        arrow_FGH = Arrow(O, P_GH, buff=0, color=ORANGE, stroke_width=4, max_tip_length_to_length_ratio=0.15)
+        arrow_FH = Arrow(O, P_H, buff=0, color=YELLOW, stroke_width=4, max_tip_length_to_length_ratio=0.15)
+
+        dash_left = DashedLine(P_GH, P_G, color=WHITE, stroke_width=2)
+        dash_right = DashedLine(P_H, P_G, color=WHITE, stroke_width=2)
+
+        line_FGH = Line(O, P_GH)
+        line_FG = Line(O, P_G)
+        line_FH = Line(O, P_H)
+        line_dash_left = Line(P_GH, P_G)
+        line_dash_right = Line(P_H, P_G)
+        line_FG_rev = Line(P_G, O)
+        line_dash_right_rev = Line(P_G, P_H)
+
+        right_angle_left = RightAngle(line_FGH, line_dash_left, length=0.3, color=WHITE)
+        right_angle_right = RightAngle(line_FH, line_dash_right, length=0.3, color=WHITE)
+
+        angle_top_left = Angle(line_FGH, line_FG, radius=0.8, color=WHITE)
+        label_alpha_top = MathTex(r"\alpha").next_to(angle_top_left, DOWN, buff=0.1).shift(LEFT * 0.05)
+
+        angle_bottom_right = Angle(line_dash_right_rev, line_FG_rev, radius=0.8, color=WHITE)
+        label_alpha_bottom = MathTex(r"\alpha").next_to(angle_bottom_right, UP, buff=0.1).shift(RIGHT * 0.05)
+
+        label_FG = MathTex(r"F_{\text{G}}", color=RED).next_to(P_G, DOWN, buff=0.15)
+        label_FGH = MathTex(r"F_{\text{GH}}", color=ORANGE).next_to(P_GH, DOWN + LEFT, buff=0.15)
+        label_FH = MathTex(r"F_{\text{H}}", color=YELLOW).next_to(P_H, UP + RIGHT, buff=0.15)
+
+        self.add(
+            arrow_FG, arrow_FGH, arrow_FH,
+            dash_left, dash_right,
+            right_angle_left, right_angle_right,
+            angle_top_left, label_alpha_top,
+            angle_bottom_right, label_alpha_bottom,
+            label_FG, label_FGH, label_FH
+        )

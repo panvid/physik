@@ -846,3 +846,49 @@ class HubarbeitSkizze(Scene):
             brace_ds, label_ds,
             brace_h, label_h
         )
+
+class ReibungsarbeitSkizze(Scene):
+    def construct(self):
+        y_bottom = -1.8
+        y_box = y_bottom + 0.5
+
+        x_left = -2.5
+        x_right = 2.5
+
+        boden = Line(LEFT * 5.0 + UP * y_bottom, RIGHT * 5.0 + UP * y_bottom, color=WHITE, stroke_width=3)
+
+        box_width = 1.6
+        box_height = 1.0
+
+        p_left = np.array([x_left, y_box, 0])
+        p_right = np.array([x_right, y_box, 0])
+
+        path_line = DashedLine(p_left, p_right, color=GRAY, stroke_width=1.5)
+
+        koerper_left = Rectangle(width=box_width, height=box_height, color=BLUE, fill_opacity=0.3, stroke_width=3)
+        koerper_left.move_to(p_left)
+
+        koerper_right = Rectangle(width=box_width, height=box_height, color=BLUE, fill_opacity=0.3, stroke_width=3)
+        koerper_right.move_to(p_right)
+
+        kraft_laenge = 1.8
+
+        arrow_fzug_1 = Arrow(p_left, p_left + RIGHT * kraft_laenge, buff=0, color=YELLOW, stroke_width=4, max_tip_length_to_length_ratio=0.2)
+        label_fzug_1 = MathTex(r"\vec{F}_{\text{Zug}}", color=YELLOW).next_to(arrow_fzug_1, UP, buff=0.15)
+
+        arrow_fzug_2 = Arrow(p_right, p_right + RIGHT * kraft_laenge, buff=0, color=YELLOW, stroke_width=4, max_tip_length_to_length_ratio=0.2)
+        label_fzug_2 = MathTex(r"\vec{F}_{\text{Zug}}", color=YELLOW).next_to(arrow_fzug_2, UP, buff=0.15)
+
+        p_ds_start = np.array([x_left, y_bottom - 0.2, 0])
+        p_ds_end = np.array([x_right, y_bottom - 0.2, 0])
+        brace_ds = BraceBetweenPoints(p_ds_start, p_ds_end, direction=DOWN)
+        label_ds = MathTex(r"\Delta s").next_to(brace_ds, DOWN, buff=0.15)
+
+        self.add(
+            boden,
+            path_line,
+            koerper_left, koerper_right,
+            arrow_fzug_1, label_fzug_1,
+            arrow_fzug_2, label_fzug_2,
+            brace_ds, label_ds
+        )

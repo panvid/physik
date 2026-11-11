@@ -342,3 +342,28 @@ class RollreibungSkizze(Scene):
             arrow_fzug, label_fzug,
             arrow_fr, label_fr
         )
+
+class BestimmungMuHSkizze(Scene):
+    def construct(self):
+        boden = Line(LEFT * 4, RIGHT * 4, color=WHITE, stroke_width=3)
+
+        box_width = 2.0
+        box_height = 1.0
+        box_center = UP * (box_height / 2.0)
+        koerper = Rectangle(width=box_width, height=box_height, color=BLUE, fill_opacity=0.3, stroke_width=3)
+        koerper.move_to(box_center)
+
+        kraft_laenge = 2.5
+        arrow_fzug = Arrow(box_center, box_center + RIGHT * kraft_laenge, buff=0, color=YELLOW, stroke_width=4,
+                           max_tip_length_to_length_ratio=0.2)
+        arrow_fhaft = Arrow(box_center, box_center + LEFT * kraft_laenge, buff=0, color=RED, stroke_width=4,
+                            max_tip_length_to_length_ratio=0.2)
+
+        label_fzug = MathTex(r"F_{\text{Zug}}", color=YELLOW).next_to(arrow_fzug.get_end(), RIGHT)
+        label_fhaft = MathTex(r"F_{\text{Haft}}", color=RED).next_to(arrow_fhaft.get_end(), LEFT)
+
+        self.add(
+            boden, koerper,
+            arrow_fzug, label_fzug,
+            arrow_fhaft, label_fhaft
+        )

@@ -654,3 +654,51 @@ class MechanischeArbeit(Scene):
             arrow_f2, label_f2,
             brace_ds, label_ds
         )
+
+class MechanischeArbeitKomponenten(Scene):
+    def construct(self):
+        p_start = LEFT * 3.0
+        p_end = RIGHT * 3.0
+
+        path_line = DashedLine(p_start, p_end, color=GRAY, stroke_width=2, dash_length=0.15)
+
+        dot_start = Dot(p_start, radius=0.12, color=BLUE)
+        dot_end = Dot(p_end, radius=0.12, color=BLUE)
+
+        angle = 35 * DEGREES
+        f_len = 2.4
+
+        v_F = np.array([f_len * np.cos(angle), f_len * np.sin(angle), 0])
+        v_parallel = np.array([f_len * np.cos(angle), 0, 0])
+        v_perp = np.array([0, f_len * np.sin(angle), 0])
+
+        arrow_f1 = Arrow(p_start, p_start + v_F, buff=0, color=RED, stroke_width=4, max_tip_length_to_length_ratio=0.2)
+        label_f1 = MathTex(r"\vec{F}", color=RED).next_to(arrow_f1.get_end(), UP + RIGHT, buff=0.1)
+
+        arrow_f_parallel = Arrow(p_start, p_start + v_parallel, buff=0, color=YELLOW, stroke_width=3,
+                                 max_tip_length_to_length_ratio=0.2)
+        label_f_parallel = MathTex(r"\vec{F}_{\parallel}", color=YELLOW).next_to(arrow_f_parallel, DOWN, buff=0.15)
+
+        arrow_f_perp = Arrow(p_start, p_start + v_perp, buff=0, color=GREEN, stroke_width=3,
+                             max_tip_length_to_length_ratio=0.2)
+        label_f_perp = MathTex(r"\vec{F}_{\perp}", color=GREEN).next_to(arrow_f_perp, LEFT, buff=0.15)
+
+        dash_top = DashedLine(p_start + v_perp, p_start + v_F, color=GRAY, stroke_width=1.5)
+        dash_right = DashedLine(p_start + v_parallel, p_start + v_F, color=GRAY, stroke_width=1.5)
+
+        arrow_f2 = Arrow(p_end, p_end + v_F, buff=0, color=RED, stroke_width=4, max_tip_length_to_length_ratio=0.2)
+        label_f2 = MathTex(r"\vec{F}", color=RED).next_to(arrow_f2.get_end(), UP + RIGHT, buff=0.1)
+
+        brace_ds = BraceBetweenPoints(p_start, p_end, direction=DOWN)
+        label_ds = MathTex(r"\Delta s").next_to(brace_ds, DOWN, buff=0.15)
+
+        self.add(
+            path_line,
+            dot_start, dot_end,
+            arrow_f_parallel, label_f_parallel,
+            arrow_f_perp, label_f_perp,
+            dash_top, dash_right,
+            arrow_f1, label_f1,
+            arrow_f2, label_f2,
+            brace_ds, label_ds
+        )

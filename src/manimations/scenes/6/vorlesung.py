@@ -554,3 +554,74 @@ class LoseRolle(Scene):
             arrow_fh, label_fh,
             arrow_fg, label_fg
         )
+
+
+class Flaschenzug(Scene):
+    def construct(self):
+        decke = Line(LEFT * 3 + UP * 3, RIGHT * 3 + UP * 3, color=WHITE, stroke_width=4)
+
+        hatch_lines = []
+        for x in np.linspace(-2.8, 2.8, 14):
+            hatch_lines.append(Line(np.array([x, 3.0, 0]), np.array([x + 0.2, 3.25, 0]), color=WHITE, stroke_width=1.5))
+
+        befestigung_top = Line(UP * 3, UP * 2.2, color=WHITE, stroke_width=3)
+        hanger_between_top = Line(UP * 2.2, UP * 1.3, color=WHITE, stroke_width=3)
+
+        r_out = 0.55
+        r_in = 0.35
+
+        c_t1 = UP * 2.2
+        c_t2 = UP * 1.3
+
+        rolle_t1 = Circle(radius=r_out, color=WHITE, stroke_width=3).move_to(c_t1)
+        rolle_t2 = Circle(radius=r_in, color=WHITE, stroke_width=3).move_to(c_t2)
+        dot_t1 = Dot(c_t1, radius=0.08, color=WHITE)
+        dot_t2 = Dot(c_t2, radius=0.08, color=WHITE)
+
+        c_b1 = DOWN * 0.4
+        c_b2 = DOWN * 1.3
+
+        rolle_b1 = Circle(radius=r_in, color=WHITE, stroke_width=3).move_to(c_b1)
+        rolle_b2 = Circle(radius=r_out, color=WHITE, stroke_width=3).move_to(c_b2)
+        dot_b1 = Dot(c_b1, radius=0.08, color=WHITE)
+        dot_b2 = Dot(c_b2, radius=0.08, color=WHITE)
+
+        hanger_between_bottom = Line(c_b1, c_b2, color=WHITE, stroke_width=3)
+        box_side = 1.0
+        box_center = DOWN * 2.4
+        hanger_gewicht = Line(c_b2, box_center + UP * (box_side / 2.0), color=WHITE, stroke_width=3)
+        gewicht = Square(side_length=box_side, color=BLUE, fill_opacity=0.3, stroke_width=3).move_to(box_center)
+
+        rope_1 = Line(np.array([-r_out, -1.8, 0]), np.array([-r_out, 2.2, 0]), color=GRAY, stroke_width=3)
+        arc_t1 = Arc(radius=r_out, start_angle=PI, angle=-PI, arc_center=c_t1, color=GRAY, stroke_width=3)
+        rope_2 = Line(np.array([r_out, 2.2, 0]), np.array([r_out, -1.3, 0]), color=GRAY, stroke_width=3)
+        arc_b2 = Arc(radius=r_out, start_angle=0, angle=-PI, arc_center=c_b2, color=GRAY, stroke_width=3)
+        rope_3 = Line(np.array([-r_out, -1.3, 0]), np.array([-r_in, 1.3, 0]), color=GRAY, stroke_width=3)
+        arc_t2 = Arc(radius=r_in, start_angle=PI, angle=-PI, arc_center=c_t2, color=GRAY, stroke_width=3)
+        rope_4 = Line(np.array([r_in, 1.3, 0]), np.array([r_in, -0.4, 0]), color=GRAY, stroke_width=3)
+        arc_b1 = Arc(radius=r_in, start_angle=0, angle=-PI, arc_center=c_b1, color=GRAY, stroke_width=3)
+        rope_5 = Line(np.array([-r_in, -0.4, 0]), np.array([-r_in, 0.5, 0]), color=GRAY, stroke_width=3)
+
+        p_left_start = np.array([-r_out, -1.8, 0])
+        arrow_fzug_left = Arrow(p_left_start, p_left_start + DOWN * 1.1, buff=0, color=YELLOW, stroke_width=4,
+                                max_tip_length_to_length_ratio=0.2)
+        label_fzug_left = MathTex(r"F_{\text{Zug}}", color=YELLOW).next_to(arrow_fzug_left.get_end(), DOWN)
+
+        p_right_start = np.array([r_out, 0.2, 0])
+        arrow_fzug_right = Arrow(p_right_start, p_right_start + UP * 1.2, buff=0, color=YELLOW, stroke_width=4,
+                                 max_tip_length_to_length_ratio=0.2)
+        label_fzug_right = MathTex(r"F_{\text{Zug}}", color=YELLOW).next_to(arrow_fzug_right.get_end(), UP)
+
+        label_feste_rolle = Text("feste Rolle", font_size=24, color=WHITE).next_to(rolle_t1, RIGHT, buff=0.8)
+        label_lose_rolle = Text("lose Rolle", font_size=24, color=WHITE).next_to(rolle_b2, RIGHT, buff=0.8)
+
+        self.add(
+            decke, *hatch_lines, befestigung_top, hanger_between_top,
+            rolle_t1, rolle_t2, dot_t1, dot_t2,
+            hanger_between_bottom, rolle_b1, rolle_b2, dot_b1, dot_b2,
+            hanger_gewicht, gewicht,
+            rope_1, arc_t1, rope_2, arc_b2, rope_3, arc_t2, rope_4, arc_b1, rope_5,
+            arrow_fzug_left, label_fzug_left,
+            arrow_fzug_right, label_fzug_right,
+            label_feste_rolle, label_lose_rolle
+        )
